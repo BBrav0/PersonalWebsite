@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { Github } from "lucide-react"
+import { Github, Download } from "lucide-react"
 
 interface Repository {
   name: string
@@ -18,13 +18,27 @@ interface Repository {
 interface RepoConfig {
   order: number
   libraries?: string[]
+  customLinks?: {
+    label: string
+    url: string
+    variant?: 'default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link'
+    icon?: React.ReactNode
+  }[]
 }
 
 // Configuration for which repositories to display
 const REPO_CONFIG: Record<string, RepoConfig> = {
   'CoursePlanner': {
     order: 1,
-    libraries: ['Tkinter']
+    libraries: ['Tkinter'],
+    customLinks: [
+      {
+        label: 'Download',
+        url: 'https://github.com/BBrav0/CoursePlanner/releases',
+        variant: 'default',
+        icon: <Download className="w-4 h-4 mr-1" />
+      }
+    ]
   },
   'BlitzLoLLink': {
     order: 2,
@@ -32,11 +46,27 @@ const REPO_CONFIG: Record<string, RepoConfig> = {
   },
   'MidAirBlock': {
     order: 3,
-    libraries: ['Bukkit', 'Minecraft Plugin']
+    libraries: ['Bukkit', 'Minecraft Plugin'],
+    customLinks: [
+      {
+        label: 'Download',
+        url: 'https://github.com/BBrav0/MidAirBlock/releases',
+        variant: 'default',
+        icon: <Download className="w-4 h-4 mr-1" />
+      }
+    ]
   },
   'ArrowRide': {
     order: 4,
-    libraries: ['Bukkit', 'Minecraft Plugin']
+    libraries: ['Bukkit', 'Minecraft Plugin'],
+    customLinks: [
+      {
+        label: 'Download',
+        url: 'https://github.com/BBrav0/ArrowRide/releases',
+        variant: 'default',
+        icon: <Download className="w-4 h-4 mr-1" />
+      }
+    ]
   }
 }
 
@@ -94,9 +124,17 @@ export function GithubProjects() {
               <Button size="sm" variant="outline" asChild>
                 <a href={repo.html_url} target="_blank" rel="noopener noreferrer">
                   <Github className="w-4 h-4 mr-1" />
-                  GitHub
+                  GitHub Page
                 </a>
               </Button>
+              {REPO_CONFIG[repo.name]?.customLinks?.map((link, index) => (
+                <Button key={index} size="sm" variant={link.variant || 'default'} asChild>
+                  <a href={link.url} target="_blank" rel="noopener noreferrer">
+                    {link.icon}
+                    {link.label}
+                  </a>
+                </Button>
+              ))}
             </div>
           </CardContent>
         </Card>
