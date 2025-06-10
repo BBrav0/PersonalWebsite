@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { ThemeToggle } from "@/components/theme-toggle"
+import { GithubProjects } from "@/components/github-projects"
 
 export default function PersonalWebsite() {
   return (
@@ -30,7 +31,7 @@ export default function PersonalWebsite() {
                   href="#projects"
                   className="text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white transition-colors"
                 >
-                  Projects
+                  Software
                 </a>
                 <a
                   href="#contact"
@@ -120,75 +121,11 @@ export default function PersonalWebsite() {
         </div>
       </section>
 
-      {/* Projects Section */}
+      {/* Software Section */}
       <section id="projects" className="py-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-6xl mx-auto">
-          <h2 className="text-3xl font-bold text-center text-slate-900 dark:text-white mb-12">Projects</h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {/* Placeholder project cards */}
-            <Card className="hover:shadow-lg transition-shadow">
-              <CardHeader>
-                <CardTitle>Project One</CardTitle>
-                <CardDescription>A brief description of your first project and the technologies used.</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="flex flex-wrap gap-2 mb-4">
-                  <Badge>React</Badge>
-                  <Badge>TypeScript</Badge>
-                  <Badge>Node.js</Badge>
-                </div>
-                <div className="flex gap-2">
-                  <Button size="sm" variant="outline">
-                    <Github className="w-4 h-4 mr-1" />
-                    Code
-                  </Button>
-                  <Button size="sm">Live Demo</Button>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className="hover:shadow-lg transition-shadow">
-              <CardHeader>
-                <CardTitle>Project Two</CardTitle>
-                <CardDescription>A brief description of your second project and the technologies used.</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="flex flex-wrap gap-2 mb-4">
-                  <Badge>Python</Badge>
-                  <Badge>Django</Badge>
-                  <Badge>PostgreSQL</Badge>
-                </div>
-                <div className="flex gap-2">
-                  <Button size="sm" variant="outline">
-                    <Github className="w-4 h-4 mr-1" />
-                    Code
-                  </Button>
-                  <Button size="sm">Live Demo</Button>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className="hover:shadow-lg transition-shadow">
-              <CardHeader>
-                <CardTitle>Project Three</CardTitle>
-                <CardDescription>A brief description of your third project and the technologies used.</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="flex flex-wrap gap-2 mb-4">
-                  <Badge>Java</Badge>
-                  <Badge>Spring Boot</Badge>
-                  <Badge>MySQL</Badge>
-                </div>
-                <div className="flex gap-2">
-                  <Button size="sm" variant="outline">
-                    <Github className="w-4 h-4 mr-1" />
-                    Code
-                  </Button>
-                  <Button size="sm">Live Demo</Button>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
+          <h2 className="text-3xl font-bold text-center text-slate-900 dark:text-white mb-12">Software</h2>
+          <GithubProjects />
         </div>
       </section>
 
@@ -202,21 +139,9 @@ export default function PersonalWebsite() {
           </p>
           <div className="flex gap-4 justify-center">
             <Button size="lg" asChild>
-              <a href="mailto:your.email@example.com">
+              <a href="mailto:contact@benbravo.net">
                 <Mail className="w-4 h-4 mr-2" />
                 Email Me
-              </a>
-            </Button>
-            <Button size="lg" variant="outline" asChild>
-              <a href="https://www.linkedin.com/in/benbravo/" target="_blank" rel="noopener noreferrer">
-                <Linkedin className="w-4 h-4 mr-2" />
-                LinkedIn
-              </a>
-            </Button>
-            <Button size="lg" variant="outline" asChild>
-              <a href="https://github.com/BBrav0" target="_blank" rel="noopener noreferrer">
-                <Github className="w-4 h-4 mr-2" />
-                GitHub
               </a>
             </Button>
           </div>
@@ -226,7 +151,6 @@ export default function PersonalWebsite() {
       {/* Footer */}
       <footer className="bg-slate-900 text-white py-8 px-4 sm:px-6 lg:px-8">
         <div className="max-w-6xl mx-auto text-center">
-          <p className="text-slate-400">© 2024 Ben Bravo. Built with Next.js and Tailwind CSS.</p>
         </div>
       </footer>
     </div>
