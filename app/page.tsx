@@ -22,12 +22,6 @@ export default function PersonalWebsite() {
                   About
                 </a>
                 <a
-                  href="#education"
-                  className="text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white transition-colors"
-                >
-                  Education
-                </a>
-                <a
                   href="#projects"
                   className="text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white transition-colors"
                 >
@@ -92,39 +86,34 @@ export default function PersonalWebsite() {
               </Button>
             </div>
           </div>
-        </div>
-      </section>
-
-      {/* Education Section */}
-      <section id="education" className="py-20 px-4 sm:px-6 lg:px-8 bg-white dark:bg-slate-800">
-        <div className="max-w-6xl mx-auto">
-          <h2 className="text-3xl font-bold text-center text-slate-900 dark:text-white mb-12">Education</h2>
-          <Card className="max-w-2xl mx-auto">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-3">
-                <GraduationCap className="w-6 h-6 text-blue-600" />
-                University of Pittsburgh
-              </CardTitle>
-              <CardDescription>Bachelor of Science in Computer Science</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-2">
-                <p className="text-slate-600 dark:text-slate-300">
-                  <strong>Expected Graduation:</strong> Spring 2026
-                </p>
-                <p className="text-slate-600 dark:text-slate-300">
-                  <strong>Location:</strong> Pittsburgh, Pennsylvania
-                </p>
-              </div>
-            </CardContent>
-          </Card>
+          <div className="mt-16">
+            <Card className="max-w-2xl mx-auto">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-3">
+                  <GraduationCap className="w-6 h-6 text-blue-600" />
+                  Education
+                </CardTitle>
+                <CardDescription>Bachelor of Science in Computer Science</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-2">
+                  <p className="text-slate-600 dark:text-slate-300">
+                    <strong>Expected Graduation:</strong> Spring 2026
+                  </p>
+                  <p className="text-slate-600 dark:text-slate-300">
+                    <strong>Location:</strong> Pittsburgh, Pennsylvania
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
         </div>
       </section>
 
       {/* Software Section */}
-      <section id="projects" className="py-20 px-4 sm:px-6 lg:px-8">
+      <section id="projects" className="py-20 px-4 sm:px-6 lg:px-8 bg-white dark:bg-slate-800">
         <div className="max-w-6xl mx-auto">
-          <h2 className="text-3xl font-bold text-center text-slate-900 dark:text-white mb-12">Software</h2>
+          <h2 className="text-3xl font-bold text-center text-slate-900 dark:text-white mb-12">Notable Software</h2>
           <GithubProjects />
         </div>
       </section>
