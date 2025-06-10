@@ -4,8 +4,8 @@
 /node_modules
 /.pnp
 .pnp.js
-package-lock.json
-yarn.lock
+# Lock files should be committed to ensure consistent dependency installation
+# DO NOT add package-lock.json, yarn.lock, or bun.lock here
 
 # Debug and Logs
 /logs
