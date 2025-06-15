@@ -1,11 +1,14 @@
+"use client"
 import { Github, Linkedin, Mail, MapPin, Calendar, GraduationCap } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { ThemeToggle } from "@/components/theme-toggle"
-import { GithubProjects } from "@/components/github-projects"
+import { GithubProjectsSoftware, GithubProjectsProjects } from "@/components/github-projects"
+import { useState } from "react"
 
 export default function PersonalWebsite() {
+  const [rateLimited, setRateLimited] = useState(false)
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
       {/* Navigation */}
@@ -22,10 +25,16 @@ export default function PersonalWebsite() {
                   About
                 </a>
                 <a
-                  href="#projects"
+                  href="#software"
                   className="text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white transition-colors"
                 >
                   Software
+                </a>
+                <a
+                  href="#projects"
+                  className="text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white transition-colors"
+                >
+                  Projects
                 </a>
                 <a
                   href="#contact"
@@ -111,15 +120,39 @@ export default function PersonalWebsite() {
       </section>
 
       {/* Software Section */}
-      <section id="projects" className="py-20 px-4 sm:px-6 lg:px-8 bg-white dark:bg-slate-800">
+      <section id="software" className="py-20 px-4 sm:px-6 lg:px-8 bg-white dark:bg-slate-800">
         <div className="max-w-6xl mx-auto">
           <h2 className="text-3xl font-bold text-center text-slate-900 dark:text-white mb-12">Notable Software</h2>
-          <GithubProjects />
+          <p className="text-center text-slate-600 dark:text-slate-300 mb-8 max-w-2xl mx-auto">
+            A curated selection of my most impactful software solutions, each reflecting a commitment to quality, innovation, and ongoing enhancement.
+          </p>
+          {rateLimited && (
+            <div className="text-center text-red-500 font-semibold mb-4">
+              GitHub API rate limit exceeded. Software cannot be loaded at this time.
+            </div>
+          )}
+          <GithubProjectsSoftware onRateLimit={() => setRateLimited(true)} />
+        </div>
+      </section>
+
+      {/* Projects Section */}
+      <section id="projects" className="py-20 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-6xl mx-auto">
+          <h2 className="text-3xl font-bold text-center text-slate-900 dark:text-white mb-12">My Projects</h2>
+          <p className="text-center text-slate-600 dark:text-slate-300 mb-8 max-w-2xl mx-auto">
+            A showcase of select personal and professional projects, highlighting both past achievements and ongoing endeavors across diverse domains.
+          </p>
+          {rateLimited && (
+            <div className="text-center text-red-500 font-semibold mb-4">
+              GitHub API rate limit exceeded. Projects cannot be loaded at this time.
+            </div>
+          )}
+          <GithubProjectsProjects onRateLimit={() => setRateLimited(true)} />
         </div>
       </section>
 
       {/* Contact Section */}
-      <section id="contact" className="py-20 px-4 sm:px-6 lg:px-8">
+      <section id="contact" className="py-20 px-4 sm:px-6 lg:px-8 bg-white dark:bg-slate-800">
         <div className="max-w-6xl mx-auto text-center">
           <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-8">Get In Touch</h2>
           <p className="text-lg text-slate-600 dark:text-slate-300 mb-8 max-w-2xl mx-auto">
