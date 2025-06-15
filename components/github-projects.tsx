@@ -100,7 +100,7 @@ export function GithubProjects() {
   }, [])
 
   if (loading) {
-    return <div className="text-center">Loading projects...</div>
+    return <div className="text-center">Loading software...</div>
   }
 
   return (
