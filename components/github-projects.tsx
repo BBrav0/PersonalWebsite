@@ -5,6 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Github, Download } from "lucide-react"
+import { PROJECTS_REPO_CONFIG, SOFTWARE_REPO_CONFIG, RepoConfig, CustomLink } from "@/lib/github-repo-config";
 
 interface Repository {
   name: string
@@ -15,98 +16,6 @@ interface Repository {
   language: string
   languages?: Record<string, number>
   owner: { login: string }
-}
-
-interface RepoConfig {
-  order: number
-  libraries?: string[]
-  customLinks?: {
-    label: string
-    url: string
-    variant?: 'default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link'
-    icon?: React.ReactNode
-  }[]
-  title?: string
-  description?: string
-  inProgress?: boolean
-}
-
-
-const PROJECTS_REPO_CONFIG: Record<string, RepoConfig> = {
-  "PersonalWebsite": {
-    order: 1,
-    libraries: ["React","Vercel","Bun"],
-    inProgress: true,
-  },
-  "exodrive": {
-    order: 2,
-    description: "Repository for the company luxury exotics rental company ExoDrive. Website: https://exodrive.co",
-    libraries: ["React","Vercel","Supabase","Bun"],
-    inProgress: true,
-  },
-  "LoLFeedbackApp": {
-    title: "League of Legends Feedback App",
-    order: 3,
-    libraries: ["Microsoft.NET.Sdk", "WindowsForms","Riot API"],
-    inProgress: true,
-  },
-  "VoiceCommandsPC": {
-    order: 4,
-    libraries: ["Gemini API"],
-    inProgress: true,
-  },
-  "TTChat2MC": {
-    title: 'TikTok Minecraft Link',
-    order: 5,
-    libraries: ['Maven','TikTok API', 'Minecraft Plugin'],
-  }
-} 
-
-const SOFTWARE_REPO_CONFIG: Record<string, RepoConfig> = {
-  'CoursePlanner': {
-    title: 'Ben\'s Course Planner',
-    order: 1,
-    libraries: ['Tkinter'],
-    customLinks: [
-      {
-        label: 'Download',
-        url: 'https://github.com/BBrav0/CoursePlanner/releases',
-        variant: 'default',
-        icon: <Download className="w-4 h-4 mr-1" />
-      }
-    ]
-  },
-  'BlitzLoLLink': {
-    title: 'Blitz League Link',
-    order: 2,
-    libraries: ['Windows Scripting']
-  },
-  'MidAirBlock': {
-    title: 'Mid-Air Block',
-    order: 3,
-    libraries: ['Bukkit', 'Minecraft Plugin'],
-    customLinks: [
-      {
-        label: 'Download',
-        url: 'https://github.com/BBrav0/MidAirBlock/releases',
-        variant: 'default',
-        icon: <Download className="w-4 h-4 mr-1" />
-      }
-    ]
-  },
-  'ArrowRide': {
-    title: 'Arrow Ride',
-    order: 4,
-    libraries: ['Bukkit', 'Minecraft Plugin'],
-    customLinks: [
-      {
-        label: 'Download',
-        url: 'https://github.com/BBrav0/ArrowRide/releases',
-        variant: 'default',
-        icon: <Download className="w-4 h-4 mr-1" />
-      }
-    ]
-  }
 }
 
 interface GithubProjectsProps {
@@ -122,62 +31,51 @@ export function GithubProjects({ repoConfig, onRateLimit }: GithubProjectsProps)
   useEffect(() => {
     const fetchRepos = async () => {
       try {
-        const response = await fetch('https://api.github.com/users/BBrav0/repos?type=all')
-        const data = await response.json()
+        // Fetch from your own API route
+        const response = await fetch('/api/github-repos'); 
+        const data = await response.json();
 
-        if (!Array.isArray(data)) {
-          if (data.message && data.message.includes('API rate limit exceeded')) {
-            if (onRateLimit) {
-              onRateLimit()
-              return
-            } else {
-              setError('GitHub API rate limit exceeded. Projects cannot be loaded at this time. Please try again later.')
-              return
-            }
+        if (!response.ok) {
+          // Handle errors from your API route
+          if (response.status === 429) {
+            setError('Server-side GitHub API rate limit exceeded. Please try again later.');
           } else {
-            throw new Error(data.message || "Unexpected response from GitHub API")
+            setError(data.message || 'An error occurred fetching projects.');
           }
+          if (onRateLimit) {
+            onRateLimit();
+          }
+          return;
         }
         
-        // Filter and sort repositories based on configuration
-        const filteredRepos = data
+        if (!Array.isArray(data)) {
+            throw new Error(data.message || "Unexpected response from internal API");
+        }
+
+        // Filter and sort repositories based on your client-side configuration
+        // The API route sends all *relevant* repos, but you still need to sort them
+        const filteredAndSortedRepos = data
           .filter((repo: Repository) => repoConfig.hasOwnProperty(repo.name))
           .sort((a: Repository, b: Repository) => 
             (repoConfig[a.name].order || 999) - 
             (repoConfig[b.name].order || 999)
-          )
+          ) as Repository[]; // Cast to Repository[] to ensure type safety
 
-        // Fetch languages for each repo
-        const reposWithLanguages = await Promise.all(
-          filteredRepos.map(async (repo: Repository) => {
-            try {
-              const langRes = await fetch(`https://api.github.com/repos/${repo.owner.login}/${repo.name}/languages`)
-              const languages = await langRes.json()
-              // If the response has a 'message' property, it's an error
-              if (languages && typeof languages === 'object' && 'message' in languages) {
-                return { ...repo, languages: {} }
-              }
-              return { ...repo, languages }
-            } catch (e) {
-              return { ...repo, languages: {} }
-            }
-          })
-        )
-        
-        setRepos(reposWithLanguages)
+        setRepos(filteredAndSortedRepos);
+
       } catch (error: any) {
-        setError(error.message || 'An error occurred while loading projects.')
-        console.error('Error fetching repositories:', error)
+        setError(error.message || 'An error occurred while loading projects.');
+        console.error('Error fetching repositories:', error);
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
     }
 
-    fetchRepos()
+    fetchRepos();
   }, [repoConfig, onRateLimit])
 
   if (loading) {
-    return <div className="text-center">Loading software...</div>
+    return <div className="text-center">Loading projects...</div>
   }
 
   if (error) {
@@ -200,7 +98,7 @@ export function GithubProjects({ repoConfig, onRateLimit }: GithubProjectsProps)
                   .map(([lang, bytes]) => (
                     <Badge key={lang} variant="default">{lang}</Badge>
                   ))}
-              {repoConfig[repo.name]?.libraries?.map((library) => (
+              {repoConfig[repo.name]?.libraries?.map((library: string) => (
                 <Badge key={library} variant="secondary">{library}</Badge>
               ))}
               {repoConfig[repo.name]?.inProgress && (
@@ -214,7 +112,7 @@ export function GithubProjects({ repoConfig, onRateLimit }: GithubProjectsProps)
                   GitHub Page
                 </a>
               </Button>
-              {repoConfig[repo.name]?.customLinks?.map((link, index) => (
+              {repoConfig[repo.name]?.customLinks?.map((link: CustomLink, index: number) => (
                 <Button key={index} size="sm" variant={link.variant || 'default'} asChild>
                   <a href={link.url} target="_blank" rel="noopener noreferrer">
                     {link.icon}
@@ -236,4 +134,4 @@ export function GithubProjectsSoftware({ onRateLimit }: { onRateLimit?: () => vo
 
 export function GithubProjectsProjects({ onRateLimit }: { onRateLimit?: () => void } = {}) {
   return <GithubProjects repoConfig={PROJECTS_REPO_CONFIG} onRateLimit={onRateLimit} />;
-} 
+}
