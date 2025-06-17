@@ -9,6 +9,20 @@ import { useState } from "react"
 
 export default function PersonalWebsite() {
   const [rateLimited, setRateLimited] = useState(false)
+  const [lastUpdate, setLastUpdate] = useState<string | null>(null)
+
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString)
+    return date.toLocaleString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      timeZoneName: 'short'
+    })
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
       {/* Navigation */}
@@ -48,6 +62,13 @@ export default function PersonalWebsite() {
           </div>
         </div>
       </nav>
+
+      {/* Last Update */}
+      {lastUpdate && (
+        <div className="text-center text-sm text-slate-600 dark:text-slate-400 py-2 bg-white/50 dark:bg-slate-900/50 backdrop-blur-sm border-b">
+          Last site update: {formatDate(lastUpdate)}
+        </div>
+      )}
 
       {/* Hero Section */}
       <section id="about" className="py-20 px-4 sm:px-6 lg:px-8">
@@ -131,7 +152,10 @@ export default function PersonalWebsite() {
               GitHub API rate limit exceeded. Software cannot be loaded at this time.
             </div>
           )}
-          <GithubProjectsSoftware onRateLimit={() => setRateLimited(true)} />
+          <GithubProjectsSoftware 
+            onRateLimit={() => setRateLimited(true)} 
+            onLatestUpdate={setLastUpdate}
+          />
         </div>
       </section>
 
@@ -147,7 +171,10 @@ export default function PersonalWebsite() {
               GitHub API rate limit exceeded. Projects cannot be loaded at this time.
             </div>
           )}
-          <GithubProjectsProjects onRateLimit={() => setRateLimited(true)} />
+          <GithubProjectsProjects 
+            onRateLimit={() => setRateLimited(true)} 
+            onLatestUpdate={setLastUpdate}
+          />
         </div>
       </section>
 
