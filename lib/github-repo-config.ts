@@ -30,10 +30,10 @@ export const PROJECTS_REPO_CONFIG: Record<string, RepoConfig> = {
     inProgress: true,
     owner: "gunvir103",
   },
-  "LoLFeedbackApp": {
-    title: "League of Legends Feedback App",
+  "Leagueback": {
+    title: "Leagueback",
     order: 3,
-    libraries: ["Microsoft.NET.Sdk", "WindowsForms","Riot API"],
+    libraries: ["Microsoft Edgeview2", "React","Riot API"],
     inProgress: true,
   },
   "VoiceCommandsPC": {
