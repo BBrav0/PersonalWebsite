@@ -5,6 +5,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Github, Download, Filter, SortAsc, SortDesc } from "lucide-react"
+import ReactMarkdown from "react-markdown"
+import remarkGfm from "remark-gfm"
+import rehypeRaw from "rehype-raw"
 import { PROJECTS_REPO_CONFIG, SOFTWARE_REPO_CONFIG, RepoConfig, CustomLink } from "@/lib/github-repo-config";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Checkbox } from "@/components/ui/checkbox"
@@ -39,6 +42,11 @@ export function GithubProjects({ repoConfig, onRateLimit, onLatestUpdate }: Gith
     libraries: [] as string[],
     inProgress: false
   })
+
+  // State for selected repository and README content
+  const [selectedRepo, setSelectedRepo] = useState<Repository | null>(null)
+  const [readmeContent, setReadmeContent] = useState<string>('Click on a card to see more information!')
+  const [readmeLoading, setReadmeLoading] = useState(false)
 
   // Get unique languages and libraries from all repos
   const allLanguages = Array.from(new Set(repos.flatMap(repo => 
@@ -100,6 +108,40 @@ export function GithubProjects({ repoConfig, onRateLimit, onLatestUpdate }: Gith
     fetchRepos();
   }, [repoConfig, onRateLimit, onLatestUpdate])
 
+  // Fetch README when a repository is selected
+  useEffect(() => {
+    if (!selectedRepo) {
+      setReadmeContent('Click on a card to see more information!')
+      return
+    }
+
+    const controller = new AbortController()
+    const fetchReadme = async () => {
+      setReadmeLoading(true)
+      try {
+        const response = await fetch(`https://api.github.com/repos/${selectedRepo.owner.login}/${selectedRepo.name}/readme`, {
+          headers: { Accept: 'application/vnd.github.v3.raw' },
+          signal: controller.signal,
+        })
+
+        if (!response.ok) {
+          throw new Error('README not found')
+        }
+
+        const text = await response.text()
+        setReadmeContent(text)
+      } catch (err) {
+        console.error('Failed to fetch README', err)
+        setReadmeContent('README could not be loaded for this repository.')
+      } finally {
+        setReadmeLoading(false)
+      }
+    }
+
+    fetchReadme()
+    return () => controller.abort()
+  }, [selectedRepo])
+
   // Apply filters and sorting
   const filteredAndSortedRepos = repos
     .filter(repo => {
@@ -142,140 +184,154 @@ export function GithubProjects({ repoConfig, onRateLimit, onLatestUpdate }: Gith
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-wrap gap-4 items-center justify-between">
-        <Select value={sortBy} onValueChange={(value: 'featured' | 'latest' | 'alphabetical') => setSortBy(value)}>
-          <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Sort by" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="featured">Featured</SelectItem>
-            <SelectItem value="latest">Latest Commit</SelectItem>
-            <SelectItem value="alphabetical">Alphabetical</SelectItem>
-          </SelectContent>
-        </Select>
+    <div className="flex flex-col lg:flex-row gap-10">
+      {/* Controls */}
+      <div className="space-y-6 w-full">
+        <div className="flex flex-wrap gap-4 items-center justify-between">
+          <Select value={sortBy} onValueChange={(value: 'featured' | 'latest' | 'alphabetical') => setSortBy(value)}>
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Sort by" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="featured">Featured</SelectItem>
+              <SelectItem value="latest">Latest Commit</SelectItem>
+              <SelectItem value="alphabetical">Alphabetical</SelectItem>
+            </SelectContent>
+          </Select>
 
-        <Popover>
-          <PopoverTrigger asChild>
-            <Button variant="outline" size="sm">
-              <Filter className="w-4 h-4 mr-2" />
-              Filters
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="w-80">
-            <div className="space-y-4">
-              <div>
-                <Label>Languages</Label>
-                <div className="grid grid-cols-2 gap-2 mt-2">
-                  {allLanguages.map(lang => (
-                    <div key={lang} className="flex items-center space-x-2">
-                      <Checkbox
-                        id={`lang-${lang}`}
-                        checked={filters.languages.includes(lang)}
-                        onCheckedChange={(checked) => {
-                          setFilters(prev => ({
-                            ...prev,
-                            languages: checked
-                              ? [...prev.languages, lang]
-                              : prev.languages.filter(l => l !== lang)
-                          }))
-                        }}
-                      />
-                      <Label htmlFor={`lang-${lang}`}>{lang}</Label>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div>
-                <Label>Libraries</Label>
-                <div className="grid grid-cols-2 gap-2 mt-2">
-                  {allLibraries.map(lib => (
-                    <div key={lib} className="flex items-center space-x-2">
-                      <Checkbox
-                        id={`lib-${lib}`}
-                        checked={filters.libraries.includes(lib)}
-                        onCheckedChange={(checked) => {
-                          setFilters(prev => ({
-                            ...prev,
-                            libraries: checked
-                              ? [...prev.libraries, lib]
-                              : prev.libraries.filter(l => l !== lib)
-                          }))
-                        }}
-                      />
-                      <Label htmlFor={`lib-${lib}`}>{lib}</Label>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div className="flex items-center space-x-2">
-                <Checkbox
-                  id="in-progress"
-                  checked={filters.inProgress}
-                  onCheckedChange={(checked) => {
-                    setFilters(prev => ({
-                      ...prev,
-                      inProgress: checked as boolean
-                    }))
-                  }}
-                />
-                <Label htmlFor="in-progress">In Progress Only</Label>
-              </div>
-            </div>
-          </PopoverContent>
-        </Popover>
-      </div>
-
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {filteredAndSortedRepos.map((repo) => (
-          <Card key={repo.name} className="hover:shadow-lg transition-shadow">
-            <CardHeader>
-              <CardTitle>{repoConfig[repo.name]?.title || repo.name}</CardTitle>
-              <CardDescription>
-                <div className="space-y-2">
-                  <div>{repoConfig[repo.name]?.description || repo.description || 'No description available'}</div>
-                  <div className="text-xs text-slate-500 dark:text-slate-400">
-                    Last updated: {formatDate(repo.updated_at)}
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button variant="outline" size="sm">
+                <Filter className="w-4 h-4 mr-2" />
+                Filters
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-80">
+              <div className="space-y-4">
+                <div>
+                  <Label>Languages</Label>
+                  <div className="grid grid-cols-2 gap-2 mt-2">
+                    {allLanguages.map(lang => (
+                      <div key={lang} className="flex items-center space-x-2">
+                        <Checkbox
+                          id={`lang-${lang}`}
+                          checked={filters.languages.includes(lang)}
+                          onCheckedChange={(checked) => {
+                            setFilters(prev => ({
+                              ...prev,
+                              languages: checked
+                                ? [...prev.languages, lang]
+                                : prev.languages.filter(l => l !== lang)
+                            }))
+                          }}
+                        />
+                        <Label htmlFor={`lang-${lang}`}>{lang}</Label>
+                      </div>
+                    ))}
                   </div>
                 </div>
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="flex flex-wrap gap-2 mb-4">
-                {repo.languages &&
-                  Object.entries(repo.languages)
-                    .sort((a, b) => b[1] - a[1])
-                    .map(([lang, bytes]) => (
-                      <Badge key={lang} variant="default">{lang}</Badge>
+
+                <div>
+                  <Label>Libraries</Label>
+                  <div className="grid grid-cols-2 gap-2 mt-2">
+                    {allLibraries.map(lib => (
+                      <div key={lib} className="flex items-center space-x-2">
+                        <Checkbox
+                          id={`lib-${lib}`}
+                          checked={filters.libraries.includes(lib)}
+                          onCheckedChange={(checked) => {
+                            setFilters(prev => ({
+                              ...prev,
+                              libraries: checked
+                                ? [...prev.libraries, lib]
+                                : prev.libraries.filter(l => l !== lib)
+                            }))
+                          }}
+                        />
+                        <Label htmlFor={`lib-${lib}`}>{lib}</Label>
+                      </div>
                     ))}
-                {repoConfig[repo.name]?.libraries?.map((library: string) => (
-                  <Badge key={library} variant="secondary">{library}</Badge>
-                ))}
-                {repoConfig[repo.name]?.inProgress && (
-                  <Badge className="bg-red-800 text-white" variant="default">in progress</Badge>
-                )}
+                  </div>
+                </div>
+
+                <div className="flex items-center space-x-2">
+                  <Checkbox
+                    id="in-progress"
+                    checked={filters.inProgress}
+                    onCheckedChange={(checked) => {
+                      setFilters(prev => ({
+                        ...prev,
+                        inProgress: checked as boolean
+                      }))
+                    }}
+                  />
+                  <Label htmlFor="in-progress">In Progress Only</Label>
+                </div>
               </div>
-              <div className="flex gap-2">
-                <Button size="sm" variant="outline" asChild>
-                  <a href={repo.html_url} target="_blank" rel="noopener noreferrer">
-                    <Github className="w-4 h-4 mr-1" />
-                    GitHub Page
-                  </a>
-                </Button>
-                {repoConfig[repo.name]?.customLinks?.map((link: CustomLink, index: number) => (
-                  <Button key={index} size="sm" variant={link.variant || 'default'} asChild>
-                    <a href={link.url} target="_blank" rel="noopener noreferrer">
-                      {link.icon}
-                      {link.label}
-                    </a>
-                  </Button>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        ))}
+            </PopoverContent>
+          </Popover>
+        </div>
+
+        <div className="flex lg:flex-row gap-10">
+          {/* Repo list */}
+          <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-10 max-h-[80vh] overflow-y-auto pr-4 border-r border-border/40 bg-muted/10 dark:bg-muted/5 flex-1">
+            {filteredAndSortedRepos.map((repo) => (
+              <Card key={repo.name} onClick={() => setSelectedRepo(repo)} className="hover:shadow-lg transition-shadow cursor-pointer">
+                <CardHeader>
+                  <CardTitle>{repoConfig[repo.name]?.title || repo.name}</CardTitle>
+                  <CardDescription>
+                    <div className="space-y-2">
+                      <div>{repoConfig[repo.name]?.description || repo.description || 'No description available'}</div>
+                      <div className="text-xs text-slate-500 dark:text-slate-400">
+                        Last updated: {formatDate(repo.updated_at)}
+                      </div>
+                    </div>
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="flex flex-wrap gap-2 mb-4">
+                    {repo.languages &&
+                      Object.entries(repo.languages)
+                        .sort((a, b) => b[1] - a[1])
+                        .map(([lang, bytes]) => (
+                          <Badge key={lang} variant="default">{lang}</Badge>
+                        ))}
+                    {repoConfig[repo.name]?.libraries?.map((library: string) => (
+                      <Badge key={library} variant="secondary">{library}</Badge>
+                    ))}
+                    {repoConfig[repo.name]?.inProgress && (
+                      <Badge className="bg-red-800 text-white" variant="default">in progress</Badge>
+                    )}
+                  </div>
+                  <div className="flex gap-2">
+                    <Button size="sm" variant="outline" asChild>
+                      <a href={repo.html_url} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
+                        <Github className="w-4 h-4 mr-1" />
+                        GitHub Page
+                      </a>
+                    </Button>
+                    {repoConfig[repo.name]?.customLinks?.map((link: CustomLink, index: number) => (
+                      <Button key={index} size="sm" variant={link.variant || 'default'} asChild>
+                        <a href={link.url} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
+                          {link.icon}
+                          {link.label}
+                        </a>
+                      </Button>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+          {/* README panel */}
+          <div className="w-full lg:w-1/3 border rounded-md p-6 overflow-y-auto max-h-[80vh] bg-card/80 backdrop-blur-sm">
+            {readmeLoading ? (
+              <div className="text-center">Loading README...</div>
+            ) : (
+              <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]} className="prose max-w-none dark:prose-invert break-words">{readmeContent}</ReactMarkdown>
+            )}
+          </div>
+        </div>
       </div>
     </div>
   )

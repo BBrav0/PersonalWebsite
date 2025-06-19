@@ -1,3 +1,5 @@
+
+
 export interface CustomLink {
   label: string;
   url: string;
@@ -19,22 +21,16 @@ export const PROJECTS_REPO_CONFIG: Record<string, RepoConfig> = {
   "PersonalWebsite": {
     title: "Personal Website",
     order: 1,
-    libraries: ["React","Vercel","Bun","Github API"],
+    libraries: ["React","Vercel","Github API"],
     inProgress: true,
   },
   "exodrive": {
     title: "ExoDrive",
     order: 2,
     description: "Repository for the company luxury exotics rental company ExoDrive. Website: https://exodrive.co",
-    libraries: ["React","Vercel","Supabase","Bun"],
+    libraries: ["React","Vercel","Supabase"],
     inProgress: true,
     owner: "gunvir103",
-  },
-  "Leagueback": {
-    title: "Leagueback",
-    order: 3,
-    libraries: ["Microsoft Edgeview2", "React","Riot API"],
-    inProgress: true,
   },
   "VoiceCommandsPC": {
     order: 4,
@@ -58,18 +54,32 @@ export const SOFTWARE_REPO_CONFIG: Record<string, RepoConfig> = {
         label: 'Download',
         url: 'https://github.com/BBrav0/CoursePlanner/releases',
         variant: 'default',
-        icon: null // React.ReactNode will be handled in the component
+        icon: null
+      }
+    ]
+  },
+  "Leagueback": {
+    title: "Leagueback",
+    order: 2,
+    libraries: ["Microsoft Edgeview2", "React","Riot API","Supabase Proxy"],
+    inProgress: true,
+    customLinks: [
+      {
+        label: 'Download',
+        url: 'https://github.com/BBrav0/Leagueback/releases',
+        variant: 'default',
+        icon: null
       }
     ]
   },
   'BlitzLoLLink': {
     title: 'Blitz League Link',
-    order: 2,
+    order: 3,
     libraries: ['Windows Scripting']
   },
   'MidAirBlock': {
     title: 'Mid-Air Block',
-    order: 3,
+    order: 4,
     libraries: ['Bukkit', 'Minecraft Plugin'],
     customLinks: [
       {
@@ -82,7 +92,7 @@ export const SOFTWARE_REPO_CONFIG: Record<string, RepoConfig> = {
   },
   'ArrowRide': {
     title: 'Arrow Ride',
-    order: 4,
+    order: 5,
     libraries: ['Bukkit', 'Minecraft Plugin'],
     customLinks: [
       {
