@@ -18,6 +18,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning className="dark">
       <body>
         {children}
+        <Analytics />
       </body>
     </html>
   )

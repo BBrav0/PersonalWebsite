@@ -17,6 +17,20 @@ export async function GET() {
   };
 
   try {
+    // First, fetch the latest commit for PersonalWebsite without caching
+    const personalWebsiteCommitsResponse = await fetch(
+      `https://api.github.com/repos/${GITHUB_USERNAME}/PersonalWebsite/commits?per_page=1`,
+      { headers }
+    );
+    
+    let personalWebsiteLatestCommit = null;
+    if (personalWebsiteCommitsResponse.ok) {
+      const commits = await personalWebsiteCommitsResponse.json();
+      if (commits.length > 0) {
+        personalWebsiteLatestCommit = commits[0].commit.author.date;
+      }
+    }
+
     // Fetch all repositories for the user
     const reposResponse = await fetch(`https://api.github.com/users/${GITHUB_USERNAME}/repos?type=all&sort=pushed&per_page=100`, {
       headers: headers,
@@ -58,6 +72,12 @@ export async function GET() {
             console.warn(`Failed to fetch languages for ${repo.name}:`, languages.message);
             return { ...repo, languages: {} }; // Return with empty languages on error
           }
+
+          // If this is the PersonalWebsite repo and we have a latest commit, use that date
+          if (repo.name === 'PersonalWebsite' && personalWebsiteLatestCommit) {
+            return { ...repo, languages, updated_at: personalWebsiteLatestCommit };
+          }
+
           return { ...repo, languages };
         } catch (e) {
           console.error(`Error fetching languages for ${repo.name}:`, e);
