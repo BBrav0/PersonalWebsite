@@ -3,7 +3,6 @@ import { Github, Linkedin, Mail, MapPin, Calendar, GraduationCap } from "lucide-
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { ThemeToggle } from "@/components/theme-toggle"
 import { GithubProjectsSoftware, GithubProjectsProjects } from "@/components/github-projects"
 import { useState } from "react"
 
@@ -57,7 +56,7 @@ export default function PersonalWebsite() {
                   Contact
                 </a>
               </div>
-              <ThemeToggle />
+              {/* Theme toggle removed: always dark mode */}
             </div>
           </div>
         </div>
@@ -142,7 +141,7 @@ export default function PersonalWebsite() {
 
       {/* Software Section */}
       <section id="software" className="py-20 px-4 sm:px-6 lg:px-8 bg-white dark:bg-slate-800">
-        <div className="max-w-6xl mx-auto">
+        <div className="max-w-7xl mx-auto">
           <h2 className="text-3xl font-bold text-center text-slate-900 dark:text-white mb-12">Notable Software</h2>
           <p className="text-center text-slate-600 dark:text-slate-300 mb-8 max-w-2xl mx-auto">
             A curated selection of my most impactful software solutions, each reflecting a commitment to quality, innovation, and ongoing enhancement.
@@ -161,7 +160,7 @@ export default function PersonalWebsite() {
 
       {/* Projects Section */}
       <section id="projects" className="py-20 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-6xl mx-auto">
+        <div className="max-w-7xl mx-auto">
           <h2 className="text-3xl font-bold text-center text-slate-900 dark:text-white mb-12">My Projects</h2>
           <p className="text-center text-slate-600 dark:text-slate-300 mb-8 max-w-2xl mx-auto">
             A showcase of select personal and professional projects, highlighting both past achievements and ongoing endeavors across diverse domains.

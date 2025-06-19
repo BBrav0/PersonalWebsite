@@ -1,3 +1,5 @@
+
+
 export interface CustomLink {
   label: string;
   url: string;
@@ -52,7 +54,7 @@ export const SOFTWARE_REPO_CONFIG: Record<string, RepoConfig> = {
         label: 'Download',
         url: 'https://github.com/BBrav0/CoursePlanner/releases',
         variant: 'default',
-        icon: null // React.ReactNode will be handled in the component
+        icon: null
       }
     ]
   },
@@ -66,7 +68,7 @@ export const SOFTWARE_REPO_CONFIG: Record<string, RepoConfig> = {
         label: 'Download',
         url: 'https://github.com/BBrav0/Leagueback/releases',
         variant: 'default',
-        icon: null // React.ReactNode will be handled in the component
+        icon: null
       }
     ]
   },
