@@ -41,6 +41,12 @@ export const PROJECTS_REPO_CONFIG: Record<string, RepoConfig> = {
     title: 'TikTok Minecraft Link',
     order: 5,
     libraries: ['Maven','TikTok API', 'Minecraft Plugin'],
+  },
+  'FitbitDataReader': {
+    title: 'Fitbit Data Reader',
+    order: 6,
+    libraries: ['Fitbit API', 'SQLlite'],
+    owner: 'BBrav0'
   }
 }; 
 
@@ -103,4 +109,5 @@ export const SOFTWARE_REPO_CONFIG: Record<string, RepoConfig> = {
       }
     ]
   }
+
 }; 
