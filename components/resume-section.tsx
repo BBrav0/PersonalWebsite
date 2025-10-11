@@ -166,15 +166,15 @@ export function ResumeSection() {
               </div>
             ) : resumeData ? (
               <div className="space-y-6">
-                {/* PDF Viewer */}
-                <div className="border rounded-lg overflow-hidden bg-slate-50 dark:bg-slate-800">
-                  <iframe
-                    src={`${resumeData.pdfUrl}#toolbar=0&navpanes=0&scrollbar=0`}
-                    className="w-full h-[600px] border-0"
-                    title="Benjamin Bravo Resume"
-                    loading="lazy"
-                  />
-                </div>
+                  {/* PDF Viewer */}
+                  <div className="border rounded-lg overflow-hidden bg-slate-50 dark:bg-slate-800">
+                    <iframe
+                      src={`${resumeData.pdfUrl}#toolbar=0&navpanes=0&scrollbar=0&view=FitH`}
+                      className="w-full h-[600px] border-0"
+                      title="Benjamin Bravo Resume"
+                      loading="lazy"
+                    />
+                  </div>
 
                 {/* Action Buttons */}
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">

@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { GithubProjectsSoftware, GithubProjectsProjects } from "@/components/github-projects"
-import { ResumeSection } from "@/components/resume-section"
 import { useState } from "react"
 
 export default function PersonalWebsite() {
@@ -45,7 +44,7 @@ export default function PersonalWebsite() {
                   Software
                 </a>
                 <a
-                  href="#resume"
+                  href="/resume"
                   className="text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white transition-colors"
                 >
                   Resume
@@ -145,9 +144,6 @@ export default function PersonalWebsite() {
           </div>
         </div>
       </section>
-
-      {/* Resume Section */}
-      <ResumeSection />
 
       {/* Software Section */}
       <section id="software" className="py-20 px-4 sm:px-6 lg:px-8 bg-white dark:bg-slate-800">
