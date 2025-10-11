@@ -81,29 +81,15 @@ export function PDFViewer({ pdfUrl, title, className = "" }: PDFViewerProps) {
         </div>
       )}
       
-      {/* Primary iframe with Google Docs viewer as fallback */}
+      {/* Simple iframe with PDF - no additional parameters that might trigger downloads */}
       <iframe
-        src={`https://docs.google.com/gview?url=${encodeURIComponent(pdfUrl)}&embedded=true`}
+        src={pdfUrl}
         className="w-full h-[800px] border-0"
         title={title}
         onLoad={handleIframeLoad}
         onError={handleIframeError}
         loading="lazy"
-      />
-      
-      {/* Fallback iframe for direct PDF viewing */}
-      <iframe
-        src={`${pdfUrl}#toolbar=0&navpanes=0&scrollbar=0&view=FitH`}
-        className="w-full h-[800px] border-0 hidden"
-        title={`${title} - Direct`}
-        onError={() => {
-          // If Google Docs viewer fails, try direct PDF
-          const iframes = document.querySelectorAll('iframe[title*="Direct"]')
-          if (iframes.length > 0) {
-            (iframes[0] as HTMLIFrameElement).classList.remove('hidden')
-          }
-        }}
-        style={{ display: 'none' }}
+        sandbox="allow-same-origin allow-scripts allow-forms"
       />
     </div>
   )
