@@ -44,6 +44,12 @@ export default function PersonalWebsite() {
                   Software
                 </a>
                 <a
+                  href="/resume"
+                  className="text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white transition-colors"
+                >
+                  Resume
+                </a>
+                <a
                   href="#projects"
                   className="text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white transition-colors"
                 >
