@@ -18,10 +18,20 @@ export function PDFViewer({ pdfUrl, title, className = "" }: PDFViewerProps) {
   useEffect(() => {
     setPdfError(false)
     setIsLoading(true)
+    
+    // Set a timeout to stop loading after 3 seconds
+    const timeout = setTimeout(() => {
+      setIsLoading(false)
+    }, 3000)
+    
+    return () => clearTimeout(timeout)
   }, [pdfUrl])
 
   const handleIframeLoad = () => {
-    setIsLoading(false)
+    // Add a small delay to ensure content is fully loaded
+    setTimeout(() => {
+      setIsLoading(false)
+    }, 500)
   }
 
   const handleIframeError = () => {
@@ -29,9 +39,20 @@ export function PDFViewer({ pdfUrl, title, className = "" }: PDFViewerProps) {
     setIsLoading(false)
   }
 
+  const handleObjectLoad = () => {
+    setIsLoading(false)
+  }
+
+  const handleObjectError = () => {
+    setPdfError(true)
+    setIsLoading(false)
+  }
+
   const handleDownload = () => {
+    // Use the original GitHub URL for download to avoid issues
+    const downloadUrl = 'https://github.com/BBrav0/Resume-Building/raw/main/Benjamin%20Bravo%20Resume.pdf'
     const link = document.createElement('a')
-    link.href = pdfUrl
+    link.href = downloadUrl
     link.download = `${title}.pdf`
     link.target = '_blank'
     document.body.appendChild(link)
@@ -40,7 +61,9 @@ export function PDFViewer({ pdfUrl, title, className = "" }: PDFViewerProps) {
   }
 
   const handleViewExternal = () => {
-    window.open(pdfUrl, '_blank', 'noopener,noreferrer')
+    // Use the original GitHub URL for external viewing
+    const viewUrl = 'https://github.com/BBrav0/Resume-Building/raw/main/Benjamin%20Bravo%20Resume.pdf'
+    window.open(viewUrl, '_blank', 'noopener,noreferrer')
   }
 
   if (pdfError) {
@@ -49,7 +72,7 @@ export function PDFViewer({ pdfUrl, title, className = "" }: PDFViewerProps) {
         <Alert className="mb-4">
           <FileText className="h-4 w-4" />
           <AlertDescription>
-            PDF preview is not available in this browser. Please use the buttons below to view or download the resume.
+            PDF preview is not available. Please use the buttons below to view or download the resume.
           </AlertDescription>
         </Alert>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -71,7 +94,7 @@ export function PDFViewer({ pdfUrl, title, className = "" }: PDFViewerProps) {
   }
 
   return (
-    <div className={`border rounded-lg overflow-hidden bg-slate-50 dark:bg-slate-800 relative ${className}`}>
+    <div className={`border rounded-lg overflow-hidden bg-slate-50 dark:bg-slate-800 relative ${className}`} data-pdf-container>
       {isLoading && (
         <div className="absolute inset-0 bg-slate-100 dark:bg-slate-800 flex items-center justify-center">
           <div className="flex items-center gap-2 text-slate-600 dark:text-slate-400">
@@ -81,14 +104,26 @@ export function PDFViewer({ pdfUrl, title, className = "" }: PDFViewerProps) {
         </div>
       )}
       
-      {/* Simple iframe with PDF - this was working before */}
+      {/* Use Google Docs viewer to prevent downloads and ensure proper display */}
       <iframe
-        src={`${pdfUrl}#toolbar=0&navpanes=0&scrollbar=0&view=FitH`}
+        src={`https://docs.google.com/gview?url=${encodeURIComponent(pdfUrl)}&embedded=true`}
         className="w-full h-[800px] border-0"
         title={title}
         onLoad={handleIframeLoad}
-        onError={handleIframeError}
+        onError={() => {
+          // If Google Docs fails, try direct PDF
+          const iframe = document.querySelector(`iframe[title="${title}"]`) as HTMLIFrameElement
+          if (iframe) {
+            iframe.src = pdfUrl
+          }
+        }}
         loading="lazy"
+        onLoadStart={() => {
+          // Start a timer to stop loading after 2 seconds regardless
+          setTimeout(() => {
+            setIsLoading(false)
+          }, 2000)
+        }}
       />
     </div>
   )

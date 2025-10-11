@@ -72,9 +72,9 @@ export default function ResumePage() {
   }
 
   const handleDownload = () => {
-    if (resumeData?.pdfUrl) {
+    if (resumeData?.downloadUrl) {
       const link = document.createElement('a')
-      link.href = resumeData.pdfUrl
+      link.href = resumeData.downloadUrl
       link.download = 'Benjamin_Bravo_Resume.pdf'
       link.target = '_blank'
       document.body.appendChild(link)
@@ -84,8 +84,8 @@ export default function ResumePage() {
   }
 
   const handleViewExternal = () => {
-    if (resumeData?.pdfUrl) {
-      window.open(resumeData.pdfUrl, '_blank', 'noopener,noreferrer')
+    if (resumeData?.downloadUrl) {
+      window.open(resumeData.downloadUrl, '_blank', 'noopener,noreferrer')
     }
   }
 

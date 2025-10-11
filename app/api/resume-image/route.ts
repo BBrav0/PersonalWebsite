@@ -90,9 +90,12 @@ export async function GET(request: NextRequest) {
       throw new Error(`Failed to fetch PDF: ${pdfResponse.status}`)
     }
 
-    // Prepare response data
+    // Get the PDF buffer for serving
+    const pdfBuffer = await pdfResponse.arrayBuffer()
+
+    // Prepare response data - use GitHub URL directly for iframe viewing
     const responseData = {
-      pdfUrl: RESUME_PDF_URL,
+      pdfUrl: RESUME_PDF_URL, // Use GitHub URL directly
       lastModified,
       etag,
       sha,
