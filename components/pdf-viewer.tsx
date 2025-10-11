@@ -71,7 +71,7 @@ export function PDFViewer({ pdfUrl, title, className = "" }: PDFViewerProps) {
   }
 
   return (
-    <div className={`border rounded-lg overflow-hidden bg-slate-50 dark:bg-slate-800 relative ${className}`}>
+    <div className={`border rounded-lg overflow-hidden bg-slate-50 dark:bg-slate-800 relative ${className}`} data-pdf-container>
       {isLoading && (
         <div className="absolute inset-0 bg-slate-100 dark:bg-slate-800 flex items-center justify-center">
           <div className="flex items-center gap-2 text-slate-600 dark:text-slate-400">
@@ -81,16 +81,50 @@ export function PDFViewer({ pdfUrl, title, className = "" }: PDFViewerProps) {
         </div>
       )}
       
-      {/* Simple iframe with PDF - no additional parameters that might trigger downloads */}
-      <iframe
-        src={pdfUrl}
+      {/* Try object tag first - most reliable for PDF viewing */}
+      <object
+        data={`${pdfUrl}#toolbar=0&navpanes=0&scrollbar=0&view=FitH`}
+        type="application/pdf"
         className="w-full h-[800px] border-0"
-        title={title}
         onLoad={handleIframeLoad}
-        onError={handleIframeError}
-        loading="lazy"
-        sandbox="allow-same-origin allow-scripts allow-forms"
-      />
+        onError={() => {
+          // Fallback to iframe if object fails
+          const container = document.querySelector(`[data-pdf-container]`) as HTMLElement
+          if (container) {
+            container.innerHTML = `
+              <iframe 
+                src="${pdfUrl}#toolbar=0&navpanes=0&scrollbar=0&view=FitH" 
+                class="w-full h-[800px] border-0"
+                title="${title}"
+                loading="lazy"
+              ></iframe>
+            `
+          }
+        }}
+      >
+        {/* Fallback content if PDF can't be displayed */}
+        <div className="flex items-center justify-center h-full bg-slate-100 dark:bg-slate-700">
+          <div className="text-center p-8">
+            <FileText className="w-16 h-16 mx-auto mb-4 text-slate-400" />
+            <p className="text-lg font-semibold text-slate-600 dark:text-slate-300 mb-2">
+              PDF Preview Not Available
+            </p>
+            <p className="text-sm text-slate-500 dark:text-slate-400 mb-4">
+              Your browser doesn't support inline PDF viewing. Please use the buttons below.
+            </p>
+            <div className="flex gap-2 justify-center">
+              <Button onClick={handleDownload} size="sm">
+                <Download className="w-4 h-4 mr-2" />
+                Download
+              </Button>
+              <Button onClick={handleViewExternal} variant="outline" size="sm">
+                <ExternalLink className="w-4 h-4 mr-2" />
+                View
+              </Button>
+            </div>
+          </div>
+        </div>
+      </object>
     </div>
   )
 }
