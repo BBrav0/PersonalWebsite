@@ -5,6 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge"
 import { GithubProjectsSoftware, GithubProjectsProjects } from "@/components/github-projects"
 import { useState } from "react"
+import Image from "next/image"
 
 export default function PersonalWebsite() {
   const [rateLimited, setRateLimited] = useState(false)
@@ -80,9 +81,11 @@ export default function PersonalWebsite() {
         <div className="max-w-6xl mx-auto">
           <div className="text-center">
             <div className="w-32 h-32 mx-auto mb-8 relative">
-              <img
+              <Image
                 src="/images/profile.jpg"
                 alt="Ben Bravo"
+                width={128}
+                height={128}
                 className="w-full h-full object-cover rounded-full border-4 border-white shadow-lg"
                 style={{ objectPosition: "90% 5%" }}
               />

@@ -109,7 +109,7 @@ export async function GET(request: NextRequest) {
     resumeCache = {
       data: responseData,
       timestamp: now,
-      etag,
+      etag: etag ?? undefined,
       lastModified
     }
 
