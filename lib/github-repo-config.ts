@@ -47,6 +47,15 @@ export const PROJECTS_REPO_CONFIG: Record<string, RepoConfig> = {
     order: 6,
     libraries: ['Fitbit API', 'SQLlite'],
     owner: 'BBrav0'
+  },
+  'SchoolSite': {
+    title: 'School Site',
+    libraries: ["Vercel"],
+    order: 7,
+  },
+  'WaterSortSolver': {
+    title: 'Water Sort Solver',
+    order: 8,
   }
 }; 
 
