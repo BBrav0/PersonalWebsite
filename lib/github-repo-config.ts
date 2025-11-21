@@ -45,7 +45,8 @@ export const PROJECTS_REPO_CONFIG: Record<string, RepoConfig> = {
   'FitbitDataReader': {
     title: 'Fitbit Data Reader',
     order: 6,
-    libraries: ['Fitbit API', 'SQLlite'],
+    description: "Old repository for reading Fitbit running data with some strava data via their APIs.",
+    libraries: ['Fitbit API','Strava API', 'SQLlite'],
     owner: 'BBrav0'
   },
   'SchoolSite': {
@@ -56,6 +57,11 @@ export const PROJECTS_REPO_CONFIG: Record<string, RepoConfig> = {
   'WaterSortSolver': {
     title: 'Water Sort Solver',
     order: 8,
+  },
+  'GarminDataReader': {
+    title: 'Garmin Data Reader',
+    order: 3,
+    libraries: ['Garmin API', 'SQLlite']
   }
 }; 
 
