@@ -73,15 +73,15 @@ export const SOFTWARE_REPO_CONFIG: Record<string, RepoConfig> = {
       }
     ]
   },
-  "Leagueback": {
+  "Leagueback-WEBAPP": {
     title: "Leagueback",
     order: 2,
-    libraries: ["Microsoft Edgeview2", "React","Riot API","Supabase Proxy"],
+    libraries: ["React","Riot API","Supabase"],
     inProgress: true,
     customLinks: [
       {
-        label: 'Download',
-        url: 'https://github.com/BBrav0/Leagueback/releases',
+        label: 'Website',
+        url: 'https://leagueback.benbravo.net',
         variant: 'default',
         icon: null
       }
