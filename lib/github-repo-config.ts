@@ -82,7 +82,7 @@ export const SOFTWARE_REPO_CONFIG: Record<string, RepoConfig> = {
       {
         label: 'Website',
         url: 'https://leagueback.benbravo.net',
-        variant: 'default',
+        variant: 'link',
         icon: null
       }
     ]
