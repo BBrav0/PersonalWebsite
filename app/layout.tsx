@@ -8,6 +8,9 @@ export const metadata: Metadata = {
   title: "Ben Bravo's Site",
   description: "Developed by Ben",
   generator: "Benjamin Bravo",
+  icons: {
+    icon: "/icons/icon.jpeg",
+  },
 }
 
 export default function RootLayout({
