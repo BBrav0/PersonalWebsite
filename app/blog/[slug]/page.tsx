@@ -33,41 +33,47 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
+    <div className="min-h-screen bg-background noise-bg">
+      {/* Ambient background */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute -top-40 -right-40 w-80 h-80 bg-primary/5 rounded-full blur-3xl animate-glow-pulse" />
+        <div className="absolute top-1/2 -left-40 w-96 h-96 bg-purple-500/5 rounded-full blur-3xl animate-glow-pulse animation-delay-1000" />
+      </div>
+
       {/* Nav */}
-      <nav className="sticky top-0 z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm border-b">
+      <nav className="sticky top-0 z-50 glass-strong border-b border-border/50">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
-            <Link href="/blog" className="flex items-center gap-2 text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white transition-colors">
-              <ArrowLeft className="w-4 h-4" />
-              <span className="text-sm">Back to Blog</span>
+            <Link href="/blog" className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors group">
+              <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
+              <span>Blog</span>
             </Link>
-            <Link href="/" className="text-xl font-bold text-slate-900 dark:text-white">
-              Ben Bravo
+            <Link href="/" className="text-xl font-bold tracking-tight">
+              <span className="gradient-text">Ben Bravo</span>
             </Link>
-            <div className="w-24"></div>
+            <div className="w-16" />
           </div>
         </div>
       </nav>
 
       {/* Post */}
-      <article className="py-16 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-3xl mx-auto">
+      <article className="relative pt-24 pb-16 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-3xl mx-auto relative z-10">
           {/* Header */}
-          <header className="mb-10">
-            <div className="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400 mb-4">
-              <Calendar className="w-4 h-4" />
+          <header className="mb-12">
+            <div className="flex items-center gap-2 text-xs text-muted-foreground mb-4">
+              <Calendar className="w-3.5 h-3.5" />
               <time dateTime={post.date}>{post.formattedDate}</time>
             </div>
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-slate-900 dark:text-white mb-4 leading-tight">
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground mb-4 leading-tight tracking-tight">
               {post.title}
             </h1>
-            <p className="text-lg text-slate-600 dark:text-slate-300">
+            <p className="text-lg text-muted-foreground leading-relaxed">
               {post.description}
             </p>
-            <div className="flex items-center gap-2 flex-wrap mt-4">
+            <div className="flex items-center gap-2 flex-wrap mt-6">
               {post.tags.map((tag) => (
-                <Badge key={tag} variant="secondary">
+                <Badge key={tag} variant="secondary" className="text-xs font-normal">
                   {tag}
                 </Badge>
               ))}
@@ -75,14 +81,15 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
           </header>
 
           {/* Content */}
-          <div className="prose prose-lg prose-slate dark:prose-invert max-w-none
-            prose-headings:text-slate-900 dark:prose-headings:text-white
-            prose-p:text-slate-700 dark:prose-p:text-slate-300
-            prose-a:text-blue-600 dark:prose-a:text-blue-400
-            prose-code:text-pink-600 dark:prose-code:text-pink-400
-            prose-strong:text-slate-900 dark:prose-strong:text-white
-            prose-blockquote:border-blue-500 dark:prose-blockquote:border-blue-400
-            prose-li:text-slate-700 dark:prose-li:text-slate-300
+          <div className="prose prose-lg max-w-none
+            prose-headings:text-foreground prose-headings:tracking-tight
+            prose-p:text-muted-foreground prose-p:leading-relaxed
+            prose-a:text-primary prose-a:no-underline hover:prose-a:opacity-80
+            prose-code:text-purple-400 prose-code:before:content-none prose-code:after:content-none
+            prose-strong:text-foreground
+            prose-blockquote:border-primary prose-blockquote:text-muted-foreground
+            prose-li:text-muted-foreground
+            prose-hr:border-border
           ">
             <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]}>
               {post.content}
@@ -90,10 +97,10 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
           </div>
 
           {/* Back link */}
-          <div className="mt-12 pt-8 border-t border-slate-200 dark:border-slate-700">
-            <Button variant="outline" asChild>
+          <div className="mt-16 pt-8 border-t border-border/50">
+            <Button variant="outline" asChild className="group">
               <Link href="/blog" className="flex items-center gap-2">
-                <ChevronRight className="w-4 h-4 rotate-180" />
+                <ChevronRight className="w-4 h-4 rotate-180 transition-transform group-hover:-translate-x-1" />
                 All Posts
               </Link>
             </Button>
@@ -102,8 +109,8 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
       </article>
 
       {/* Footer */}
-      <footer className="bg-slate-900 text-white py-8 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-6xl mx-auto text-center text-sm text-slate-400">
+      <footer className="border-t border-border/50 py-8 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-6xl mx-auto text-center text-sm text-muted-foreground">
           © {new Date().getFullYear()} Ben Bravo
         </div>
       </footer>
