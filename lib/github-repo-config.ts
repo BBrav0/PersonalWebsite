@@ -102,12 +102,12 @@ export const SOFTWARE_REPO_CONFIG: Record<string, RepoConfig> = {
   },
   'BlitzLoLLink': {
     title: 'Blitz League Link',
-    order: 3,
+    order: 4,
     libraries: ['Windows Scripting']
   },
   'MidAirBlock': {
     title: 'Mid-Air Block',
-    order: 4,
+    order: 5,
     libraries: ['Bukkit', 'Minecraft Plugin'],
     customLinks: [
       {
@@ -120,7 +120,7 @@ export const SOFTWARE_REPO_CONFIG: Record<string, RepoConfig> = {
   },
   'ArrowRide': {
     title: 'Arrow Ride',
-    order: 5,
+    order: 6,
     libraries: ['Bukkit', 'Minecraft Plugin'],
     customLinks: [
       {
@@ -133,7 +133,7 @@ export const SOFTWARE_REPO_CONFIG: Record<string, RepoConfig> = {
   },
   'ChessCoachAI': {
     title: 'Chess Coach AI',
-    order: 6,
+    order: 3,
     description: 'An interactive chess training app that combines in-browser engine analysis with rating-aware AI coaching.',
     libraries: ['Next.js', 'Stockfish 18', 'LLM Coaching'],
     inProgress: true,
