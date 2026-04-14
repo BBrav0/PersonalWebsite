@@ -57,7 +57,7 @@ export async function GET(request: NextRequest) {
 
     const githubData = await githubResponse.json()
     const lastModified = githubData.commit?.committer?.date
-    const etag = githubResponse.headers.get('etag')
+    const etag = githubResponse.headers.get('etag') ?? undefined
     const sha = githubData.sha
 
     // Check if the file has been updated
