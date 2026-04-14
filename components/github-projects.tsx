@@ -1,9 +1,9 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { Github, Download, Filter, ExternalLink, BookOpen } from "lucide-react"
+import { Github, Filter, BookOpen, X } from "lucide-react"
 import ReactMarkdown from "react-markdown"
 import remarkGfm from "remark-gfm"
 import rehypeRaw from "rehype-raw"
@@ -12,7 +12,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Checkbox } from "@/components/ui/checkbox"
 import { Label } from "@/components/ui/label"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
-import { X } from "lucide-react"
 
 interface Repository {
   name: string
@@ -26,6 +25,10 @@ interface Repository {
   updated_at: string
 }
 
+interface DisplayRepository extends Repository {
+  isManual?: boolean
+}
+
 interface GithubProjectsProps {
   repoConfig: Record<string, RepoConfig>;
   onRateLimit?: () => void;
@@ -33,7 +36,7 @@ interface GithubProjectsProps {
 }
 
 export function GithubProjects({ repoConfig, onRateLimit, onLatestUpdate }: GithubProjectsProps) {
-  const [repos, setRepos] = useState<Repository[]>([])
+  const [repos, setRepos] = useState<DisplayRepository[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [sortBy, setSortBy] = useState<'featured' | 'latest' | 'alphabetical'>('featured')
@@ -44,7 +47,7 @@ export function GithubProjects({ repoConfig, onRateLimit, onLatestUpdate }: Gith
   })
 
   // State for selected repository and README content
-  const [selectedRepo, setSelectedRepo] = useState<Repository | null>(null)
+  const [selectedRepo, setSelectedRepo] = useState<DisplayRepository | null>(null)
   const [readmeContent, setReadmeContent] = useState<string>('')
   const [readmeLoading, setReadmeLoading] = useState(false)
 
@@ -55,6 +58,25 @@ export function GithubProjects({ repoConfig, onRateLimit, onLatestUpdate }: Gith
   const allLibraries = Array.from(new Set(repos.flatMap(repo => 
     repoConfig[repo.name]?.libraries || []
   )))
+
+  const manualRepos = useMemo<DisplayRepository[]>(
+    () =>
+      Object.entries(repoConfig)
+        .filter(([, config]) => Boolean(config.manualRepo))
+        .map(([name, config]) => ({
+          name,
+          description: config.description || 'No description available',
+          html_url: config.manualRepo?.githubUrl || '',
+          homepage: '',
+          topics: [],
+          language: Object.keys(config.manualRepo?.languages || {})[0] || '',
+          languages: config.manualRepo?.languages || {},
+          owner: { login: config.owner || '' },
+          updated_at: config.manualRepo?.updatedAt || new Date(0).toISOString(),
+          isManual: true,
+        })),
+    [repoConfig]
+  )
 
   useEffect(() => {
     const fetchRepos = async () => {
@@ -83,11 +105,17 @@ export function GithubProjects({ repoConfig, onRateLimit, onLatestUpdate }: Gith
           .sort((a: Repository, b: Repository) => 
             (repoConfig[a.name].order || 999) - 
             (repoConfig[b.name].order || 999)
-          ) as Repository[];
+          ) as DisplayRepository[];
 
-        setRepos(filteredAndSortedRepos);
+        const fetchedRepoNames = new Set(filteredAndSortedRepos.map((repo) => repo.name))
+        const combinedRepos = [
+          ...filteredAndSortedRepos,
+          ...manualRepos.filter((repo) => !fetchedRepoNames.has(repo.name)),
+        ]
 
-        const personalWebsiteRepo = filteredAndSortedRepos.find(repo => repo.name === 'PersonalWebsite')
+        setRepos(combinedRepos);
+
+        const personalWebsiteRepo = combinedRepos.find(repo => repo.name === 'PersonalWebsite')
         if (personalWebsiteRepo && onLatestUpdate) {
           onLatestUpdate(personalWebsiteRepo.updated_at)
         }
@@ -101,12 +129,25 @@ export function GithubProjects({ repoConfig, onRateLimit, onLatestUpdate }: Gith
     }
 
     fetchRepos();
-  }, [repoConfig, onRateLimit, onLatestUpdate])
+  }, [manualRepos, repoConfig, onRateLimit, onLatestUpdate])
 
   // Fetch README when a repository is selected
   useEffect(() => {
     if (!selectedRepo) {
       setReadmeContent('')
+      return
+    }
+
+    const selectedConfig = repoConfig[selectedRepo.name]
+    if (selectedRepo.isManual) {
+      setReadmeContent(selectedConfig?.detailsMarkdown || 'More details coming soon.')
+      setReadmeLoading(false)
+      return
+    }
+
+    if (selectedConfig?.detailsMarkdown) {
+      setReadmeContent(selectedConfig.detailsMarkdown)
+      setReadmeLoading(false)
       return
     }
 
@@ -135,7 +176,7 @@ export function GithubProjects({ repoConfig, onRateLimit, onLatestUpdate }: Gith
 
     fetchReadme()
     return () => controller.abort()
-  }, [selectedRepo])
+  }, [repoConfig, selectedRepo])
 
   // Apply filters and sorting
   const filteredAndSortedRepos = repos
@@ -294,6 +335,8 @@ export function GithubProjects({ repoConfig, onRateLimit, onLatestUpdate }: Gith
           {filteredAndSortedRepos.map((repo) => {
             const config = repoConfig[repo.name]
             const isSelected = selectedRepo?.name === repo.name
+            const hasGithubLink = Boolean(repo.html_url)
+            const hasCustomLinks = Boolean(config?.customLinks?.length)
             return (
               <div
                 key={repo.name}
@@ -338,22 +381,26 @@ export function GithubProjects({ repoConfig, onRateLimit, onLatestUpdate }: Gith
                     </Badge>
                   ))}
                 </div>
-                <div className="flex gap-2">
-                  <Button size="sm" variant="outline" className="h-8 text-xs bg-card/50 border-border/50" asChild>
-                    <a href={repo.html_url} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
-                      <Github className="w-3.5 h-3.5 mr-1" />
-                      GitHub
-                    </a>
-                  </Button>
-                  {config?.customLinks?.map((link: CustomLink, index: number) => (
-                    <Button key={index} size="sm" variant={link.variant || 'default'} className="h-8 text-xs" asChild>
-                      <a href={link.url} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
-                        {link.icon}
-                        {link.label}
-                      </a>
-                    </Button>
-                  ))}
-                </div>
+                {(hasGithubLink || hasCustomLinks) && (
+                  <div className="flex gap-2">
+                    {hasGithubLink && (
+                      <Button size="sm" variant="outline" className="h-8 text-xs bg-card/50 border-border/50" asChild>
+                        <a href={repo.html_url} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
+                          <Github className="w-3.5 h-3.5 mr-1" />
+                          GitHub
+                        </a>
+                      </Button>
+                    )}
+                    {config?.customLinks?.map((link: CustomLink, index: number) => (
+                      <Button key={index} size="sm" variant={link.variant || 'default'} className="h-8 text-xs" asChild>
+                        <a href={link.url} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
+                          {link.icon}
+                          {link.label}
+                        </a>
+                      </Button>
+                    ))}
+                  </div>
+                )}
               </div>
             )
           })}
@@ -366,7 +413,7 @@ export function GithubProjects({ repoConfig, onRateLimit, onLatestUpdate }: Gith
               <div className="p-4 border-b border-border/50 flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <BookOpen className="w-4 h-4 text-primary" />
-                  <h3 className="text-sm font-semibold text-foreground">{selectedRepo.name}</h3>
+                  <h3 className="text-sm font-semibold text-foreground">{repoConfig[selectedRepo.name]?.title || selectedRepo.name}</h3>
                 </div>
                 <button
                   onClick={() => setSelectedRepo(null)}

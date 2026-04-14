@@ -13,8 +13,14 @@ export interface RepoConfig {
   customLinks?: CustomLink[];
   title?: string;
   description?: string;
+  detailsMarkdown?: string;
   inProgress?: boolean;
   owner?: string;
+  manualRepo?: {
+    updatedAt: string;
+    languages?: Record<string, number>;
+    githubUrl?: string;
+  };
 }
 
 export const PROJECTS_REPO_CONFIG: Record<string, RepoConfig> = {
@@ -63,7 +69,8 @@ export const PROJECTS_REPO_CONFIG: Record<string, RepoConfig> = {
     order: 3,
     libraries: ['Garmin API', 'SQLlite']
   }
-}; 
+};
+
 
 export const SOFTWARE_REPO_CONFIG: Record<string, RepoConfig> = {
   'CoursePlanner': {
@@ -123,6 +130,43 @@ export const SOFTWARE_REPO_CONFIG: Record<string, RepoConfig> = {
         icon: null // React.ReactNode will be handled in the component
       }
     ]
+  },
+  'ChessCoachAI': {
+    title: 'Chess Coach AI',
+    order: 6,
+    description: 'An interactive chess training app that combines in-browser engine analysis with rating-aware AI coaching.',
+    libraries: ['Next.js', 'Stockfish 18', 'LLM Coaching'],
+    inProgress: true,
+    customLinks: [
+      {
+        label: 'Website',
+        url: 'https://chess.benbravo.net',
+        variant: 'default',
+        icon: null
+      }
+    ],
+    detailsMarkdown: `# Chess Coach AI
+
+Chess Coach AI is a live product at [chess.benbravo.net](https://chess.benbravo.net) built around a simple idea: let the engine handle chess, and let the AI handle coaching.
+
+It includes:
+
+- Interactive analysis board
+- In-browser Stockfish 18 evaluation
+- Opening explorer data
+- AI chat that can interact with the current board state
+- PGN export and annotations
+- Multiple chat tabs
+- Google sign-in and premium features
+- Rating-aware coaching
+
+The repository is private, but the product is real and actively being improved.`,
+    manualRepo: {
+      updatedAt: '2026-04-13T00:00:00.000Z',
+      languages: {
+        TypeScript: 1
+      }
+    }
   }
 
 }; 
