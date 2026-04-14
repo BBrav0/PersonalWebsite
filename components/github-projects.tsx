@@ -80,15 +80,26 @@ export function GithubProjects({ repoConfig, onRateLimit, onLatestUpdate }: Gith
 
   useEffect(() => {
     const fetchRepos = async () => {
+      const fallbackToManualRepos = () => {
+        if (manualRepos.length > 0) {
+          setRepos(manualRepos)
+          return true
+        }
+
+        return false
+      }
+
       try {
         const response = await fetch('/api/github-repos'); 
         const data = await response.json();
 
         if (!response.ok) {
+          const hasManualFallback = fallbackToManualRepos()
+
           if (response.status === 429) {
-            setError('Server-side GitHub API rate limit exceeded. Please try again later.');
+            setError(hasManualFallback ? null : 'Server-side GitHub API rate limit exceeded. Please try again later.');
           } else {
-            setError(data.message || 'An error occurred fetching projects.');
+            setError(hasManualFallback ? null : data.message || 'An error occurred fetching projects.');
           }
           if (onRateLimit) {
             onRateLimit();
@@ -101,7 +112,7 @@ export function GithubProjects({ repoConfig, onRateLimit, onLatestUpdate }: Gith
         }
 
         const filteredAndSortedRepos = data
-          .filter((repo: Repository) => repoConfig.hasOwnProperty(repo.name))
+          .filter((repo: Repository) => Object.prototype.hasOwnProperty.call(repoConfig, repo.name))
           .sort((a: Repository, b: Repository) => 
             (repoConfig[a.name].order || 999) - 
             (repoConfig[b.name].order || 999)
@@ -121,7 +132,8 @@ export function GithubProjects({ repoConfig, onRateLimit, onLatestUpdate }: Gith
         }
 
       } catch (error: any) {
-        setError(error.message || 'An error occurred while loading projects.');
+        const hasManualFallback = fallbackToManualRepos()
+        setError(hasManualFallback ? null : error.message || 'An error occurred while loading projects.');
         console.error('Error fetching repositories:', error);
       } finally {
         setLoading(false);
