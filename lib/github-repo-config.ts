@@ -105,32 +105,6 @@ export const SOFTWARE_REPO_CONFIG: Record<string, RepoConfig> = {
     order: 4,
     libraries: ['Windows Scripting']
   },
-  'MidAirBlock': {
-    title: 'Mid-Air Block',
-    order: 5,
-    libraries: ['Bukkit', 'Minecraft Plugin'],
-    customLinks: [
-      {
-        label: 'Download',
-        url: 'https://github.com/BBrav0/MidAirBlock/releases',
-        variant: 'default',
-        icon: null // React.ReactNode will be handled in the component
-      }
-    ]
-  },
-  'ArrowRide': {
-    title: 'Arrow Ride',
-    order: 6,
-    libraries: ['Bukkit', 'Minecraft Plugin'],
-    customLinks: [
-      {
-        label: 'Download',
-        url: 'https://github.com/BBrav0/ArrowRide/releases',
-        variant: 'default',
-        icon: null // React.ReactNode will be handled in the component
-      }
-    ]
-  },
   'ChessCoachAI': {
     title: 'Chess Coach AI',
     order: 3,
