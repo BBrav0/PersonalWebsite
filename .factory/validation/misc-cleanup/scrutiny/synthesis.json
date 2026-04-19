@@ -1,0 +1,42 @@
+{
+  "milestone": "misc-cleanup",
+  "round": 1,
+  "status": "pass",
+  "validatorsRun": {
+    "test": { "passed": true, "command": "N/A - no unit tests exist in this project", "exitCode": null },
+    "typecheck": { "passed": true, "command": "npx tsc --noEmit", "exitCode": 0 },
+    "lint": { "passed": true, "command": "npx next lint", "exitCode": null, "note": "ESLint never configured (no .eslintrc). Project has ignoreDuringBuilds: true in next.config.mjs. Not a failure - lint was never part of this project's workflow." },
+    "build": { "passed": true, "command": "npx next build", "exitCode": 0 }
+  },
+  "reviewsSummary": {
+    "total": 1,
+    "passed": 1,
+    "failed": 0,
+    "failedFeatures": []
+  },
+  "blockingIssues": [],
+  "nonBlockingIssues": [
+    {
+      "featureId": "remove-webhook-secret-references",
+      "severity": "non_blocking",
+      "description": "RESUME_SETUP.md still references GITHUB_WEBHOOK_SECRET in two places (lines 44 and 54). While outside the feature's explicit scope, this is a residual reference that contradicts the intent of removing webhook secret references."
+    }
+  ],
+  "appliedUpdates": [
+    {
+      "target": "library",
+      "description": "Removed stale GITHUB_WEBHOOK_SECRET reference from .factory/library/environment.md since the user doesn't have a webhook secret",
+      "sourceFeature": "remove-webhook-secret-references"
+    }
+  ],
+  "suggestedGuidanceUpdates": [
+    {
+      "target": "AGENTS.md",
+      "suggestion": "Remove GITHUB_WEBHOOK_SECRET from the 'Environment Variables' section. The user confirmed they don't have a webhook secret, and the production-facing docs (README.md, wrangler.jsonc) no longer reference it.",
+      "evidence": "Feature remove-webhook-secret-references removed the secret from wrangler.jsonc, README.md, and added a comment in the webhook route noting verification is disabled. But AGENTS.md was not updated.",
+      "isSystemic": false
+    }
+  ],
+  "rejectedObservations": [],
+  "previousRound": null
+}

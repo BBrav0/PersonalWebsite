@@ -15,4 +15,3 @@ Must use `--legacy-peer-deps` due to peer dep conflict: react-day-picker@8.10.1 
 
 ## Environment Variables (set in Cloudflare dashboard)
 - `GITHUB_PERSONAL_ACCESS_TOKEN` — GitHub API auth for fetching repos
-- `GITHUB_WEBHOOK_SECRET` — HMAC signature verification for GitHub webhooks
