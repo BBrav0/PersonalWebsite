@@ -40,19 +40,14 @@ The system uses two methods to detect updates:
 4. Set the Payload URL to: `https://your-domain.com/api/github-webhook`
 5. Set Content type to: `application/json`
 6. Select "Just the push event"
-7. Add a secret (optional but recommended)
-8. Set the secret in your environment variables as `GITHUB_WEBHOOK_SECRET`
+7. Webhook signature verification is optional and disabled by default (no secret configuration needed)
 
 ### Option 2: Manual Refresh
 Users can click the "Refresh" button to manually check for updates.
 
 ## Environment Variables
 
-Add these to your `.env.local` file:
-
-```env
-GITHUB_WEBHOOK_SECRET=your_webhook_secret_here
-```
+No environment variables are required for the resume section. Webhook signature verification is disabled by default.
 
 ## API Endpoints
 
