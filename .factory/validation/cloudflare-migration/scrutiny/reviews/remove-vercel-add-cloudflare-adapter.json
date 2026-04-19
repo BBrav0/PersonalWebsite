@@ -1,0 +1,39 @@
+{
+  "featureId": "remove-vercel-add-cloudflare-adapter",
+  "reviewedAt": "2026-04-19T22:52:00.000Z",
+  "commitId": "f88f287",
+  "transcriptSkeletonReviewed": true,
+  "diffReviewed": true,
+  "status": "pass",
+  "codeReview": {
+    "summary": "The feature correctly removes all Vercel dependencies (@vercel/analytics, @vercel/speed-insights) from package.json and app/layout.tsx, installs @opennextjs/cloudflare and wrangler, creates properly configured open-next.config.ts and wrangler.jsonc, adds Cloudflare Web Analytics beacon to layout.tsx, updates package.json scripts with preview/deploy commands, and updates .gitignore. All 10 fulfilled assertions (VAL-BUILD-001 through VAL-BUILD-004, VAL-VERCEL-001 through VAL-VERCEL-004, VAL-ANALYTICS-001, VAL-ANALYTICS-002) are verified as satisfied. The build succeeds with 13 pages generated. No @vercel references remain in source code.",
+    "issues": [
+      {
+        "file": "package.json",
+        "line": 68,
+        "severity": "non_blocking",
+        "description": "wrangler (^4.83.0) is listed under 'dependencies' instead of 'devDependencies'. Wrangler is a CLI/build tool and should be a dev dependency. This doesn't affect functionality but increases production dependency footprint."
+      },
+      {
+        "file": "app/layout.tsx",
+        "line": 28,
+        "severity": "non_blocking",
+        "description": "The Cloudflare Web Analytics <Script> tag is placed inside <head> with strategy='afterInteractive'. Next.js's afterInteractive strategy actually injects scripts into <body>, not <head>. The visual placement in the source is misleading but the beacon will still load and work correctly. Consider using strategy='beforeInteractive' or a plain <script> tag if <head> placement is important."
+      }
+    ]
+  },
+  "sharedStateObservations": [
+    {
+      "area": "conventions",
+      "observation": "The feature description specified wrangler should be installed as a regular dependency (npm install), but wrangler is a build/CLI tool that should be in devDependencies. AGENTS.md doesn't specify whether build tools should go in dependencies or devDependencies.",
+      "evidence": "package.json line 68: \"wrangler\": \"^4.83.0\" is under dependencies, not devDependencies. The feature description instruction was 'npm install --legacy-peer-deps @opennextjs/cloudflare wrangler' which defaults to dependencies."
+    },
+    {
+      "area": "conventions",
+      "observation": "The wrangler.jsonc env var comments were added by a later feature (verify-build-and-update-docs, commit d1c0765), not by this feature. This feature created wrangler.jsonc without the comments. This is correct per feature boundaries — noted for completeness.",
+      "evidence": "The wrangler.jsonc in commit f88f287 has 11 lines (no comments). Current wrangler.jsonc has env var comments added by commit d1c0765."
+    }
+  ],
+  "addressesFailureFrom": null,
+  "summary": "PASS. The feature successfully removes all Vercel dependencies, adds the Cloudflare adapter with correct configuration, adds Cloudflare Web Analytics, updates package.json scripts and .gitignore, and the build succeeds. Two non-blocking issues found: (1) wrangler should be in devDependencies rather than dependencies, (2) the Script tag placement in <head> with afterInteractive strategy is misleading since Next.js will inject it in <body>. Neither issue blocks functionality or deployment."
+}

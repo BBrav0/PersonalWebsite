@@ -1,0 +1,45 @@
+{
+  "featureId": "adapt-api-routes-for-cloudflare",
+  "reviewedAt": "2026-04-19T22:55:00.000Z",
+  "commitId": "ac10e70",
+  "transcriptSkeletonReviewed": true,
+  "diffReviewed": true,
+  "status": "pass",
+  "codeReview": {
+    "summary": "All changes correctly adapt API routes for Cloudflare Workers runtime. ISR revalidate removed from both fetch calls in github-repos, in-memory resumeCache fully removed from resume-image, Cache-Control headers added to responses, and dynamicParams=false added to blog/[slug]/page.tsx. No bugs, no security issues, no regressions in core logic. The resume-pdf and github-webhook routes were correctly left unchanged. Build succeeds with all 13 pages generated.",
+    "issues": [
+      {
+        "file": "app/api/github-webhook/route.ts",
+        "line": 34,
+        "severity": "non_blocking",
+        "description": "Stale comment: 'Clear the resume cache to force a fresh fetch' — the in-memory resumeCache in resume-image/route.ts has been removed by this feature, so this comment references functionality that no longer exists. The webhook route was explicitly scoped as 'no changes needed', so this is a minor leftover. Consider updating the comment in a future cleanup pass to say something like 'Resume PDF updated, downstream CDN caches will expire via TTL'."
+      },
+      {
+        "file": "app/api/resume-image/route.ts",
+        "line": 37,
+        "severity": "non_blocking",
+        "description": "The route fetches the full PDF (RESUME_PDF_URL) just to verify accessibility but never consumes the response body. The old code read it into pdfBuffer but that was removed. The fetch still works (only checks pdfResponse.ok), but it pulls the entire PDF over the network on every request only to discard it. Consider either removing this check entirely (the GitHub API metadata fetch already confirms the file exists) or using a HEAD request instead of GET to avoid downloading the PDF body."
+      },
+      {
+        "file": "app/api/github-repos/route.ts",
+        "line": 88,
+        "severity": "non_blocking",
+        "description": "Cache-Control header is only set on the success response path. The error responses (lines 12, 49, 52, 93) do not set Cache-Control headers. This is acceptable for error responses (they default to no-cache behavior), but for the rate-limit 429 response (line 49) you might consider adding a short Cache-Control to prevent clients from hammering a rate-limited endpoint. Minor optimization, not a bug."
+      }
+    ]
+  },
+  "sharedStateObservations": [
+    {
+      "area": "conventions",
+      "observation": "The github-webhook route (line 34) still references 'Clear the resume cache' in a comment, but the in-memory resumeCache was removed from resume-image as part of this feature. AGENTS.md doesn't mention a convention about keeping cross-route comments in sync when caching strategies change.",
+      "evidence": "app/api/github-webhook/route.ts:34 — comment says 'cache should be invalidated' but the cache variable it conceptually references (resumeCache in resume-image/route.ts) no longer exists after this commit."
+    },
+    {
+      "area": "knowledge",
+      "observation": "The resume-image route still does a full GET fetch of the PDF (RESUME_PDF_URL) to verify accessibility, even though the pdfBuffer was removed. This wastes bandwidth on every uncached request. A HEAD request or removing this check entirely would be more efficient on a Workers runtime where egress/compute time matters. This pattern could be documented in .factory/library/ as a known optimization opportunity.",
+      "evidence": "app/api/resume-image/route.ts:37-45 — fetches full PDF via GET but only checks .ok status, never reads body."
+    }
+  ],
+  "addressesFailureFrom": null,
+  "summary": "PASS. The feature correctly adapts all API routes for Cloudflare Workers: ISR revalidate removed from github-repos (both fetch calls), in-memory resumeCache fully eliminated from resume-image, Cache-Control headers added to all relevant responses, dynamicParams=false exported in blog/[slug]/page.tsx. The resume-pdf and github-webhook routes are correctly unchanged. Build succeeds. Three non-blocking issues noted: (1) stale cache-invalidation comment in webhook route, (2) unnecessary full PDF fetch in resume-image that could be a HEAD request, (3) no Cache-Control on error responses in github-repos. None are blocking — the implementation fully meets the feature requirements."
+}

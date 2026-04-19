@@ -1,0 +1,77 @@
+{
+  "milestone": "cloudflare-migration",
+  "round": 1,
+  "status": "pass",
+  "validatorsRun": {
+    "test": { "passed": true, "command": "N/A", "exitCode": null, "note": "No unit tests exist in this project" },
+    "typecheck": { "passed": true, "command": "npx tsc --noEmit", "exitCode": 0 },
+    "lint": { "passed": true, "command": "npx next lint", "exitCode": null, "note": "No ESLint configuration exists; project has eslint.ignoreDuringBuilds: true in next.config.mjs. Lint is intentionally not configured." }
+  },
+  "reviewsSummary": {
+    "total": 3,
+    "passed": 3,
+    "failed": 0,
+    "failedFeatures": []
+  },
+  "blockingIssues": [],
+  "nonBlockingIssues": [
+    {
+      "featureId": "remove-vercel-add-cloudflare-adapter",
+      "severity": "non_blocking",
+      "description": "wrangler (^4.83.0) is in dependencies instead of devDependencies. It's a CLI/build tool and doesn't need to ship to production."
+    },
+    {
+      "featureId": "remove-vercel-add-cloudflare-adapter",
+      "severity": "non_blocking",
+      "description": "Cloudflare Web Analytics <Script> tag in <head> with strategy='afterInteractive' is misleading — Next.js injects afterInteractive scripts into <body>. Functionally correct but source placement is misleading."
+    },
+    {
+      "featureId": "adapt-api-routes-for-cloudflare",
+      "severity": "non_blocking",
+      "description": "Stale comment in github-webhook route (line 34) references 'Clear the resume cache' but the in-memory resumeCache was removed. Comment is now misleading."
+    },
+    {
+      "featureId": "adapt-api-routes-for-cloudflare",
+      "severity": "non_blocking",
+      "description": "resume-image route does a full GET fetch of the PDF just to check accessibility (.ok), discarding the body. Could use HEAD request or remove the check since the GitHub API metadata fetch already confirms the file exists."
+    },
+    {
+      "featureId": "adapt-api-routes-for-cloudflare",
+      "severity": "non_blocking",
+      "description": "Cache-Control headers are only set on success responses in github-repos route. Error responses (including 429 rate-limit) have no Cache-Control. Minor optimization opportunity."
+    },
+    {
+      "featureId": "verify-build-and-update-docs",
+      "severity": "non_blocking",
+      "description": "wrangler.jsonc env var comments are placed after the closing brace of the JSON object. Valid JSONC but slightly unconventional placement."
+    }
+  ],
+  "appliedUpdates": [],
+  "suggestedGuidanceUpdates": [
+    {
+      "target": "AGENTS.md",
+      "suggestion": "Add convention: Build/CLI tools (wrangler, opennextjs-cloudflare) should be installed as devDependencies, not dependencies. Use 'npm install --save-dev --legacy-peer-deps' for build tooling.",
+      "evidence": "Feature remove-vercel-add-cloudflare-adapter installed wrangler under dependencies because the feature description used 'npm install' without --save-dev. The feature description itself didn't specify devDependencies vs dependencies.",
+      "isSystemic": false
+    }
+  ],
+  "rejectedObservations": [
+    {
+      "observation": "wrangler.jsonc env var comments were added by a later feature (verify-build-and-update-docs), not by remove-vercel-add-cloudflare-adapter. Noted as correct per feature boundaries.",
+      "reason": "Informational only — correct behavior, no action needed"
+    },
+    {
+      "observation": "Stale cache comment in github-webhook route references removed resumeCache variable",
+      "reason": "Minor cleanup item, too specific for shared state — captured as non-blocking issue in review"
+    },
+    {
+      "observation": "Resume-image full PDF fetch optimization opportunity (HEAD request instead of GET)",
+      "reason": "Route-specific optimization — not worth documenting as shared knowledge"
+    },
+    {
+      "observation": "AGENTS.md already correctly documents --legacy-peer-deps and env vars, matching README.md",
+      "reason": "Purely confirmatory — no action needed"
+    }
+  ],
+  "previousRound": null
+}
