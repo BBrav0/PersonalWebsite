@@ -1,0 +1,44 @@
+{
+  "milestone": "cloudflare-migration",
+  "round": 1,
+  "status": "pass",
+  "assertionsSummary": {
+    "total": 21,
+    "passed": 21,
+    "failed": 0,
+    "blocked": 0
+  },
+  "passedAssertions": [
+    "VAL-BUILD-001",
+    "VAL-BUILD-002",
+    "VAL-BUILD-003",
+    "VAL-BUILD-004",
+    "VAL-BUILD-005",
+    "VAL-VERCEL-001",
+    "VAL-VERCEL-002",
+    "VAL-VERCEL-003",
+    "VAL-VERCEL-004",
+    "VAL-API-001",
+    "VAL-API-002",
+    "VAL-API-003",
+    "VAL-API-004",
+    "VAL-ANALYTICS-001",
+    "VAL-ANALYTICS-002",
+    "VAL-RUNTIME-001",
+    "VAL-RUNTIME-002",
+    "VAL-RUNTIME-003",
+    "VAL-CROSS-001",
+    "VAL-CROSS-002",
+    "VAL-CROSS-003"
+  ],
+  "failedAssertions": [],
+  "blockedAssertions": [],
+  "appliedUpdates": [
+    {
+      "target": "user-testing.md",
+      "description": "Added Flow Validator Guidance sections for code-inspection and build surfaces with testing approach, key paths, and boundaries",
+      "source": "setup"
+    }
+  ],
+  "previousRound": null
+}

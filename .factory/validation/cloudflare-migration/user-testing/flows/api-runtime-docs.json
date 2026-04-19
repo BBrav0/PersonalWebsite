@@ -1,0 +1,130 @@
+{
+  "groupId": "api-runtime-docs",
+  "testedAt": "2026-04-19T19:01:00Z",
+  "isolation": {
+    "projectRoot": "C:\\Users\\bendc\\Documents\\GitHub\\PersonalWebsite",
+    "mode": "read-only-inspection"
+  },
+  "toolsUsed": ["Read", "Grep", "Glob"],
+  "assertions": [
+    {
+      "id": "VAL-API-001",
+      "title": "github-repos ISR removed",
+      "status": "pass",
+      "steps": [
+        { "action": "Grep for 'revalidate' in app/api/github-repos/route.ts", "expected": "No matches", "observed": "No matches found" },
+        { "action": "Grep for 'Cache-Control' in app/api/github-repos/route.ts", "expected": "Cache-Control header present", "observed": "Line 89: 'Cache-Control': 'public, max-age=3600'" }
+      ],
+      "evidence": {
+        "screenshots": [],
+        "consoleErrors": "N/A (code inspection)",
+        "network": "N/A (code inspection)",
+        "files": ["cloudflare-migration/api-runtime-docs/VAL-API-001-grep-revalidate.txt"]
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-API-002",
+      "title": "resume-image in-memory cache removed",
+      "status": "pass",
+      "steps": [
+        { "action": "Grep for 'resumeCache' in app/api/resume-image/route.ts", "expected": "No matches", "observed": "No matches found" },
+        { "action": "Read app/api/resume-image/route.ts and verify no module-level cache variable", "expected": "No module-level cache variable", "observed": "No resumeCache or similar variable found" },
+        { "action": "Verify Cache-Control header in resume-image route", "expected": "Cache-Control header present", "observed": "Line 60: 'Cache-Control': 'public, max-age=300'" }
+      ],
+      "evidence": {
+        "screenshots": [],
+        "consoleErrors": "N/A (code inspection)",
+        "network": "N/A (code inspection)",
+        "files": ["cloudflare-migration/api-runtime-docs/VAL-API-002-grep-resumeCache.txt"]
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-API-003",
+      "title": "github-webhook crypto works with nodejs_compat",
+      "status": "pass",
+      "steps": [
+        { "action": "Verify crypto import in app/api/github-webhook/route.ts", "expected": "import crypto from 'crypto'", "observed": "Line 2: import crypto from 'crypto'" },
+        { "action": "Verify crypto.createHmac usage", "expected": "crypto.createHmac('sha256', ...) used", "observed": "Line 13: crypto.createHmac('sha256', WEBHOOK_SECRET).update(body).digest('hex')" },
+        { "action": "Verify nodejs_compat in wrangler.jsonc", "expected": "nodejs_compat in compatibility_flags", "observed": "Line 6: \"compatibility_flags\": [\"nodejs_compat\"]" }
+      ],
+      "evidence": {
+        "screenshots": [],
+        "consoleErrors": "N/A (code inspection)",
+        "network": "N/A (code inspection)",
+        "files": ["cloudflare-migration/api-runtime-docs/VAL-API-003-crypto-nodejs-compat.txt"]
+      },
+      "issues": "Build verification (that this route actually works at runtime) is handled by the build group, not this code-inspection group."
+    },
+    {
+      "id": "VAL-API-004",
+      "title": "Cache-Control headers are appropriate",
+      "status": "pass",
+      "steps": [
+        { "action": "List all API route files", "expected": "All route files identified", "observed": "4 routes: github-repos, resume-image, resume-pdf, github-webhook" },
+        { "action": "Grep for Cache-Control across all API routes", "expected": "Data-serving routes have Cache-Control", "observed": "github-repos: max-age=3600, resume-image: max-age=300, resume-pdf: max-age=3600 s-maxage=3600" },
+        { "action": "Grep for 'revalidate' across all API routes", "expected": "No ISR revalidate references", "observed": "No matches found" },
+        { "action": "Check github-webhook route for Cache-Control", "expected": "No Cache-Control (webhook shouldn't cache)", "observed": "No Cache-Control header on webhook responses (appropriate)" }
+      ],
+      "evidence": {
+        "screenshots": [],
+        "consoleErrors": "N/A (code inspection)",
+        "network": "N/A (code inspection)",
+        "files": ["cloudflare-migration/api-runtime-docs/VAL-API-004-cache-control-all-routes.txt"]
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-RUNTIME-001",
+      "title": "Blog dynamic params disabled",
+      "status": "pass",
+      "steps": [
+        { "action": "Grep for 'dynamicParams' in app/blog/[slug]/page.tsx", "expected": "export const dynamicParams = false", "observed": "Line 11: export const dynamicParams = false" }
+      ],
+      "evidence": {
+        "screenshots": [],
+        "consoleErrors": "N/A (code inspection)",
+        "network": "N/A (code inspection)",
+        "files": ["cloudflare-migration/api-runtime-docs/VAL-RUNTIME-001-dynamicParams.txt"]
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-RUNTIME-003",
+      "title": "Environment variables documented",
+      "status": "pass",
+      "steps": [
+        { "action": "Check wrangler.jsonc for env var documentation", "expected": "GITHUB_PERSONAL_ACCESS_TOKEN and GITHUB_WEBHOOK_SECRET documented", "observed": "Both env vars documented in trailing comments with descriptions and usage context" },
+        { "action": "Check README.md for env var documentation", "expected": "Env vars mentioned in deployment section", "observed": "Environment variables section lists both vars with descriptions under 'Deploying' heading" }
+      ],
+      "evidence": {
+        "screenshots": [],
+        "consoleErrors": "N/A (code inspection)",
+        "network": "N/A (code inspection)",
+        "files": ["cloudflare-migration/api-runtime-docs/VAL-RUNTIME-003-env-vars-documented.txt"]
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-CROSS-003",
+      "title": "README updated",
+      "status": "pass",
+      "steps": [
+        { "action": "Read README.md Tech Stack section", "expected": "Deployment listed as Cloudflare", "observed": "**Deployment:** Cloudflare Pages" },
+        { "action": "Read README.md Deploying section", "expected": "Cloudflare deployment instructions", "observed": "Deploys to Cloudflare Pages using @opennextjs/cloudflare adapter with CLI and Dashboard options" },
+        { "action": "Check for residual Vercel references", "expected": "No Vercel deployment references", "observed": "No Vercel deployment references found in README.md" }
+      ],
+      "evidence": {
+        "screenshots": [],
+        "consoleErrors": "N/A (code inspection)",
+        "network": "N/A (code inspection)",
+        "files": ["cloudflare-migration/api-runtime-docs/VAL-CROSS-003-readme-updated.txt"]
+      },
+      "issues": null
+    }
+  ],
+  "frictions": [],
+  "blockers": [],
+  "summary": "Tested 7 assertions: 7 passed, 0 failed. All API routes have ISR removed and use Cache-Control headers. crypto+nodejs_compat configuration is correct. Blog dynamicParams=false is set. Env vars are documented in both wrangler.jsonc and README.md. README deployment references updated to Cloudflare."
+}

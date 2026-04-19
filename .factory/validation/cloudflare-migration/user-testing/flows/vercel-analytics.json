@@ -1,0 +1,128 @@
+{
+  "groupId": "vercel-analytics",
+  "testedAt": "2026-04-19T19:01:00Z",
+  "isolation": {
+    "projectRoot": "C:\\Users\\bendc\\Documents\\GitHub\\PersonalWebsite",
+    "mode": "read-only-inspection",
+    "tools": ["Read", "Grep", "Glob"]
+  },
+  "toolsUsed": ["Read", "Grep", "Glob"],
+  "assertions": [
+    {
+      "id": "VAL-VERCEL-001",
+      "title": "@vercel/analytics removed",
+      "status": "pass",
+      "steps": [
+        { "action": "Grep package.json for @vercel/analytics", "expected": "No matches", "observed": "No matches found" },
+        { "action": "Grep app/ for @vercel/analytics", "expected": "No matches", "observed": "No matches found" },
+        { "action": "Grep components/ for @vercel/analytics", "expected": "No matches", "observed": "No matches found" },
+        { "action": "Grep lib/ for @vercel/analytics", "expected": "No matches", "observed": "No matches found" }
+      ],
+      "evidence": {
+        "grepResults": "cloudflare-migration/vercel-analytics/grep-results.txt",
+        "consoleErrors": "N/A (file inspection only)"
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-VERCEL-002",
+      "title": "@vercel/speed-insights removed",
+      "status": "pass",
+      "steps": [
+        { "action": "Grep package.json for @vercel/speed-insights", "expected": "No matches", "observed": "No matches found" },
+        { "action": "Grep app/ for @vercel/speed-insights", "expected": "No matches", "observed": "No matches found" },
+        { "action": "Grep components/ for @vercel/speed-insights", "expected": "No matches", "observed": "No matches found" },
+        { "action": "Grep lib/ for @vercel/speed-insights", "expected": "No matches", "observed": "No matches found" }
+      ],
+      "evidence": {
+        "grepResults": "cloudflare-migration/vercel-analytics/grep-results.txt",
+        "consoleErrors": "N/A (file inspection only)"
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-VERCEL-003",
+      "title": "Vercel components removed from layout",
+      "status": "pass",
+      "steps": [
+        { "action": "Read app/layout.tsx", "expected": "No Analytics or SpeedInsights imports or JSX", "observed": "No @vercel imports found. No <Analytics /> or <SpeedInsights /> components. Layout contains only Cloudflare Web Analytics beacon script." }
+      ],
+      "evidence": {
+        "fileContents": "app/layout.tsx read - contains only standard React/Next.js imports and Cloudflare beacon script",
+        "grepResults": "cloudflare-migration/vercel-analytics/grep-results.txt",
+        "consoleErrors": "N/A (file inspection only)"
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-VERCEL-004",
+      "title": "No residual Vercel references in source",
+      "status": "pass",
+      "steps": [
+        { "action": "Grep app/ for @vercel", "expected": "No matches", "observed": "No matches found" },
+        { "action": "Grep components/ for @vercel", "expected": "No matches", "observed": "No matches found" },
+        { "action": "Grep lib/ for @vercel", "expected": "No matches", "observed": "No matches found" },
+        { "action": "Grep lib/github-repo-config.ts for @vercel", "expected": "No matches (or display strings only)", "observed": "No matches found" },
+        { "action": "Grep next.config.mjs for @vercel", "expected": "No matches", "observed": "No matches found" },
+        { "action": "Grep open-next.config.ts for @vercel", "expected": "No matches", "observed": "No matches found" },
+        { "action": "Grep postcss.config.mjs for @vercel", "expected": "No matches", "observed": "No matches found" },
+        { "action": "Grep tsconfig.json for @vercel", "expected": "No matches", "observed": "No matches found" },
+        { "action": "Grep components.json for @vercel", "expected": "No matches", "observed": "No matches found" },
+        { "action": "Grep tailwind.config.ts for @vercel", "expected": "No matches", "observed": "No matches found" },
+        { "action": "Grep package.json for @vercel", "expected": "No matches", "observed": "No matches found" }
+      ],
+      "evidence": {
+        "grepResults": "cloudflare-migration/vercel-analytics/grep-results.txt",
+        "consoleErrors": "N/A (file inspection only)"
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-ANALYTICS-001",
+      "title": "Cloudflare Web Analytics added",
+      "status": "pass",
+      "steps": [
+        { "action": "Read app/layout.tsx", "expected": "Contains cloudflareinsights.com/beacon.min.js script with token", "observed": "Found: <script defer src=\"https://static.cloudflareinsights.com/beacon.min.js\" data-cf-beacon='{\"token\": \"YOUR_TOKEN_HERE\"}' />" }
+      ],
+      "evidence": {
+        "fileContents": "app/layout.tsx contains Cloudflare beacon script with placeholder token YOUR_TOKEN_HERE",
+        "grepResults": "cloudflare-migration/vercel-analytics/grep-results.txt",
+        "consoleErrors": "N/A (file inspection only)"
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-ANALYTICS-002",
+      "title": "No duplicate analytics",
+      "status": "pass",
+      "steps": [
+        { "action": "Cross-reference VAL-VERCEL-001 result", "expected": "@vercel/analytics not in package.json or source", "observed": "Confirmed: no @vercel/analytics anywhere" },
+        { "action": "Cross-reference VAL-VERCEL-002 result", "expected": "@vercel/speed-insights not in package.json or source", "observed": "Confirmed: no @vercel/speed-insights anywhere" },
+        { "action": "Cross-reference VAL-VERCEL-003 result", "expected": "No Vercel analytics components in layout", "observed": "Confirmed: only Cloudflare Web Analytics beacon present in layout" }
+      ],
+      "evidence": {
+        "grepResults": "cloudflare-migration/vercel-analytics/grep-results.txt",
+        "consoleErrors": "N/A (file inspection only)"
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-CROSS-002",
+      "title": "Lock file clean",
+      "status": "pass",
+      "steps": [
+        { "action": "Grep package-lock.json for @vercel/analytics", "expected": "No matches", "observed": "No matches found" },
+        { "action": "Grep package-lock.json for @vercel/speed-insights", "expected": "No matches", "observed": "No matches found" },
+        { "action": "Grep package-lock.json for @opennextjs/cloudflare", "expected": "Matches found", "observed": "Found at lines 12, 3004, 3006 — @opennextjs/cloudflare@^1.19.1 present" }
+      ],
+      "evidence": {
+        "grepResults": "cloudflare-migration/vercel-analytics/grep-results.txt",
+        "consoleErrors": "N/A (file inspection only)"
+      },
+      "issues": null
+    }
+  ],
+  "frictions": [],
+  "blockers": [],
+  "summary": "Tested 7 assertions: 7 passed, 0 failed. All Vercel analytics packages and imports have been fully removed from package.json, lock file, and all source files. Cloudflare Web Analytics beacon is correctly added to app/layout.tsx with a placeholder token. No duplicate analytics present. Lock file is clean with @opennextjs/cloudflare present."
+}

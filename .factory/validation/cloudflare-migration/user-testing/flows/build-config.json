@@ -1,0 +1,115 @@
+{
+  "groupId": "build-config",
+  "testedAt": "2026-04-19T19:03:00Z",
+  "isolation": {
+    "projectRoot": "C:\\Users\\bendc\\Documents\\GitHub\\PersonalWebsite",
+    "role": "build group — runs npx opennextjs-cloudflare build",
+    "readOnly": true
+  },
+  "toolsUsed": ["Execute", "Read", "Grep", "Glob", "LS"],
+  "assertions": [
+    {
+      "id": "VAL-BUILD-001",
+      "title": "OpenNext adapter installed and configured",
+      "status": "pass",
+      "steps": [
+        { "action": "Grep package.json for @opennextjs/cloudflare", "expected": "Dependency listed", "observed": "Found at line 15: \"@opennextjs/cloudflare\": \"^1.19.1\"" },
+        { "action": "Read open-next.config.ts", "expected": "Valid config file exists", "observed": "File exists with defineCloudflareConfig() from @opennextjs/cloudflare" }
+      ],
+      "evidence": {
+        "files": ["cloudflare-migration/build-config/VAL-BUILD-001-package-json-dep.txt"]
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-BUILD-002",
+      "title": "wrangler.jsonc exists with correct settings",
+      "status": "pass",
+      "steps": [
+        { "action": "Read wrangler.jsonc", "expected": "File exists with name, compatibility_date >= 2024-09-23, nodejs_compat flag, assets config", "observed": "name: personal-website, compatibility_date: 2025-04-01, flags: [nodejs_compat], assets: { directory: .open-next/assets, binding: ASSETS }" }
+      ],
+      "evidence": {
+        "files": ["cloudflare-migration/build-config/VAL-BUILD-002-wrangler-jsonc.txt"]
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-BUILD-003",
+      "title": "Build scripts updated for Cloudflare",
+      "status": "pass",
+      "steps": [
+        { "action": "Read package.json scripts", "expected": "build remains 'next build', preview and deploy use opennextjs-cloudflare CLI", "observed": "build: 'next build', preview: 'opennextjs-cloudflare build && opennextjs-cloudflare preview', deploy: 'opennextjs-cloudflare build && opennextjs-cloudflare deploy'" }
+      ],
+      "evidence": {
+        "files": ["cloudflare-migration/build-config/VAL-BUILD-003-scripts.txt"]
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-BUILD-004",
+      "title": ".gitignore updated for Cloudflare",
+      "status": "pass",
+      "steps": [
+        { "action": "Read .gitignore", "expected": ".open-next listed, .vercel removed or absent", "observed": ".open-next listed under '# Deployment' section, no .vercel entry present" }
+      ],
+      "evidence": {
+        "files": ["cloudflare-migration/build-config/VAL-BUILD-004-gitignore.txt"]
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-BUILD-005",
+      "title": "Full build succeeds",
+      "status": "pass",
+      "steps": [
+        { "action": "Run npx opennextjs-cloudflare build", "expected": "Exit code 0", "observed": "Exit code 0, build completed successfully" },
+        { "action": "Check .open-next/worker.js exists", "expected": "File exists", "observed": "worker.js exists (2278 bytes)" },
+        { "action": "Check .open-next/assets/ exists", "expected": "Directory exists with static assets", "observed": "assets/ directory exists with _next/, icons/, images/, BUILD_ID, and placeholder files" }
+      ],
+      "evidence": {
+        "files": ["cloudflare-migration/build-config/VAL-BUILD-005-build-output.txt"]
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-CROSS-001",
+      "title": "End-to-end build produces deployable output",
+      "status": "pass",
+      "steps": [
+        { "action": "Run npm install --legacy-peer-deps", "expected": "Exit code 0", "observed": "Exit code 0, up to date, 803 packages audited" },
+        { "action": "Run npx opennextjs-cloudflare build", "expected": "Exit code 0", "observed": "Exit code 0, OpenNext build complete" },
+        { "action": "Verify worker entry point", "expected": ".open-next/worker.js exists", "observed": "worker.js exists (2278 bytes)" },
+        { "action": "Verify static assets", "expected": ".open-next/assets/ contains assets", "observed": "assets/ directory contains _next/ (JS chunks), icons/, images/, and static files" }
+      ],
+      "evidence": {
+        "files": ["cloudflare-migration/build-config/VAL-CROSS-001-e2e-build.txt"]
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-RUNTIME-002",
+      "title": "Blog SSG works with OpenNext adapter",
+      "status": "pass",
+      "steps": [
+        { "action": "Check build log for blog page generation", "expected": "Blog pages listed as SSG (●) with generateStaticParams", "observed": "● /blog/[slug] with 3 slugs: chess-coach-ai-live-whats-next, chess-broken-for-ai, ai-secretary" },
+        { "action": "Verify cache files for all blog slugs", "expected": "Cache files exist for each slug", "observed": "3 .cache files found: chess-coach-ai-live-whats-next.cache, chess-broken-for-ai.cache, ai-secretary.cache" },
+        { "action": "Verify cache contains HTML", "expected": "Cache files contain HTML content", "observed": "ai-secretary.cache confirmed to contain HTML markup" },
+        { "action": "Verify generateStaticParams ran at build time", "expected": "Build log shows ● (SSG) symbol", "observed": "● symbol in route table confirms SSG at build time in Node.js, not on Worker" }
+      ],
+      "evidence": {
+        "files": ["cloudflare-migration/build-config/VAL-RUNTIME-002-blog-ssg.txt"]
+      },
+      "issues": null
+    }
+  ],
+  "frictions": [
+    {
+      "description": "OpenNext shows warnings about Windows compatibility: 'OpenNext is not fully compatible with Windows. For optimal performance, it is recommended to use Windows Subsystem for Linux (WSL).' Build still succeeds.",
+      "resolved": true,
+      "resolution": "Warnings are informational only - build completes successfully on Windows",
+      "affectedAssertions": ["VAL-BUILD-005", "VAL-CROSS-001"]
+    }
+  ],
+  "blockers": [],
+  "summary": "Tested 7 assertions: all 7 passed. Build configuration is correct (OpenNext adapter, wrangler.jsonc, scripts, .gitignore), full build succeeds with exit code 0 producing worker.js and assets, and all 3 blog posts are pre-rendered via SSG at build time."
+}
