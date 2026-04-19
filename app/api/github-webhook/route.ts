@@ -30,9 +30,9 @@ export async function POST(request: NextRequest) {
       )
 
       if (resumeFileChanged) {
-        // Clear the resume cache to force a fresh fetch
-        // In a production environment, you might want to use a more sophisticated cache invalidation
-        console.log('Resume PDF updated, cache should be invalidated')
+        // Resume cache is handled by Cache-Control headers in the resume-image route,
+        // so no manual cache invalidation is needed here
+        console.log('Resume PDF updated')
         
         // You could also trigger a rebuild or send a notification here
         // For now, we'll just log the event

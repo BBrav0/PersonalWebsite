@@ -65,7 +65,6 @@
     "tailwind-merge": "^2.5.5",
     "tailwindcss-animate": "^1.0.7",
     "vaul": "^0.9.6",
-    "wrangler": "^4.83.0",
     "zod": "^3.24.1"
   },
   "devDependencies": {
@@ -74,6 +73,7 @@
     "@types/react-dom": "^19",
     "postcss": "^8.5",
     "tailwindcss": "^3.4.17",
-    "typescript": "^5"
+    "typescript": "^5",
+    "wrangler": "^4.83.0"
   }
 }
