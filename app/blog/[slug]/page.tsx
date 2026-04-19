@@ -8,6 +8,8 @@ import { Badge } from "@/components/ui/badge"
 import { ArrowLeft, Calendar, ChevronRight } from "lucide-react"
 import Link from "next/link"
 
+export const dynamicParams = false
+
 export async function generateStaticParams() {
   const slugs = getPostSlugs()
   return slugs.map((slug) => ({ slug }))

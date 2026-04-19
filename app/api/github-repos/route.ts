@@ -34,7 +34,6 @@ export async function GET() {
     // Fetch all repositories for the user
     const reposResponse = await fetch(`https://api.github.com/users/${GITHUB_USERNAME}/repos?type=all&sort=pushed&per_page=100`, {
       headers: headers,
-      next: { revalidate: 3600 } // Revalidate data every hour (optional, for caching)
     });
 
     const reposData = await reposResponse.json();
@@ -64,7 +63,6 @@ export async function GET() {
           const owner = config?.owner || GITHUB_USERNAME;
           const langRes = await fetch(`https://api.github.com/repos/${owner}/${repo.name}/languages`, {
             headers: headers,
-            next: { revalidate: 3600 } // Revalidate language data every hour
           });
           const languages = await langRes.json();
 
@@ -86,7 +84,11 @@ export async function GET() {
       })
     );
 
-    return NextResponse.json(reposWithLanguages);
+    return NextResponse.json(reposWithLanguages, {
+      headers: {
+        'Cache-Control': 'public, max-age=3600',
+      },
+    });
 
   } catch (error: any) {
     console.error('Server API Error:', error);
