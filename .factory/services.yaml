@@ -1,0 +1,7 @@
+commands:
+  install: npm install --legacy-peer-deps
+  build: npx opennextjs-cloudflare build
+  next-build: npx next build
+  preview: npx opennextjs-cloudflare build && npx opennextjs-cloudflare preview
+  lint: npx next lint
+  typecheck: npx tsc --noEmit
