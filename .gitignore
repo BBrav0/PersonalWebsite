@@ -57,7 +57,7 @@ next-env.d.ts
 /.nuxt
 
 # Deployment
-.vercel
+.open-next
 
 # OS specific
 Thumbs.db
