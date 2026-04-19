@@ -45,7 +45,6 @@ npm run deploy
 
 **Environment variables** (set in Cloudflare dashboard):
 - `GITHUB_PERSONAL_ACCESS_TOKEN` — GitHub API token for fetching repos
-- `GITHUB_WEBHOOK_SECRET` — Secret for verifying GitHub webhook payloads
 
 ## Writing a Blog Post
 

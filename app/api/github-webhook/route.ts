@@ -8,7 +8,8 @@ export async function POST(request: NextRequest) {
     const body = await request.text()
     const signature = request.headers.get('x-hub-signature-256')
     
-    // Verify webhook signature if secret is configured
+    // Webhook signature verification is disabled when GITHUB_WEBHOOK_SECRET is not set.
+    // To enable verification, set the GITHUB_WEBHOOK_SECRET environment variable.
     if (WEBHOOK_SECRET && signature) {
       const expectedSignature = `sha256=${crypto
         .createHmac('sha256', WEBHOOK_SECRET)
