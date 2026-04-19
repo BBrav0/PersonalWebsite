@@ -15,18 +15,37 @@ Personal website built with Next.js. Live at [benbravo.net](https://benbravo.net
 - **Language:** TypeScript
 - **Styling:** Tailwind CSS + Radix UI + Tailwind Typography
 - **Blog:** gray-matter (frontmatter) + react-markdown + remark-gfm + rehype-raw
-- **Deployment:** Vercel
+- **Deployment:** Cloudflare Pages
 
 ## Running Locally
 
 ```bash
 git clone https://github.com/BBrav0/PersonalWebsite.git
 cd PersonalWebsite
-npm install
+npm install --legacy-peer-deps
 npm run dev
 ```
 
 Open [localhost:3000](http://localhost:3000).
+
+## Deploying
+
+This site deploys to Cloudflare Pages using the `@opennextjs/cloudflare` adapter.
+
+**Option A — CLI deploy:**
+```bash
+npm run deploy
+```
+
+**Option B — Cloudflare Dashboard (recommended):**
+1. Connect your GitHub repo in the [Cloudflare Pages dashboard](https://dash.cloudflare.com/)
+2. Set the build command to `npx opennextjs-cloudflare build`
+3. Set the output directory to `.open-next/assets`
+4. Add required environment variables (see below)
+
+**Environment variables** (set in Cloudflare dashboard):
+- `GITHUB_PERSONAL_ACCESS_TOKEN` — GitHub API token for fetching repos
+- `GITHUB_WEBHOOK_SECRET` — Secret for verifying GitHub webhook payloads
 
 ## Writing a Blog Post
 
