@@ -5,7 +5,8 @@ const GITHUB_USERNAME = "BBrav0"; // Your GitHub username
 
 export async function GET() {
   // Read env var at request time for Cloudflare Workers compatibility
-  const GITHUB_TOKEN = process.env.GITHUB_PERSONAL_ACCESS_TOKEN;
+  // Trim to handle potential whitespace/newlines in Cloudflare secrets
+  const GITHUB_TOKEN = process.env.GITHUB_PERSONAL_ACCESS_TOKEN?.trim();
   console.log('Attempting to fetch repositories. GITHUB_TOKEN status:', GITHUB_TOKEN ? 'Loaded' : 'Not Loaded');
   if (!GITHUB_TOKEN) {
     console.error('GITHUB_PERSONAL_ACCESS_TOKEN is not set in environment variables.');
@@ -15,6 +16,7 @@ export async function GET() {
   const headers = {
     'Authorization': `token ${GITHUB_TOKEN}`,
     'Accept': 'application/vnd.github.v3+json',
+    'User-Agent': 'BBrav0-PersonalWebsite',
   };
 
   try {
@@ -27,9 +29,12 @@ export async function GET() {
     let personalWebsiteLatestCommit = null;
     if (personalWebsiteCommitsResponse.ok) {
       const commits = await personalWebsiteCommitsResponse.json();
-      if (commits.length > 0) {
+      if (Array.isArray(commits) && commits.length > 0) {
         personalWebsiteLatestCommit = commits[0].commit.author.date;
       }
+    } else {
+      const errorText = await personalWebsiteCommitsResponse.text();
+      console.error('GitHub commits API error:', personalWebsiteCommitsResponse.status, errorText);
     }
 
     // Fetch all repositories for the user
@@ -37,16 +42,17 @@ export async function GET() {
       headers: headers,
     });
 
-    const reposData = await reposResponse.json();
-
     if (!reposResponse.ok) {
-      // Handle GitHub API errors, including rate limits
-      console.error('GitHub API error:', reposData.message);
-      if (reposResponse.status === 403 && reposData.message && reposData.message.includes('API rate limit exceeded')) {
+      // Read error as text first - GitHub errors may not be valid JSON
+      const errorText = await reposResponse.text();
+      console.error('GitHub API error:', reposResponse.status, errorText);
+      if (reposResponse.status === 403 && errorText.includes('API rate limit exceeded')) {
         return NextResponse.json({ message: 'GitHub API rate limit exceeded on server.' }, { status: 429 });
       }
-      return NextResponse.json({ message: reposData.message || 'Failed to fetch repositories from GitHub.' }, { status: reposResponse.status || 500 });
+      return NextResponse.json({ message: errorText || 'GitHub API error', status: reposResponse.status }, { status: reposResponse.status });
     }
+
+    const reposData = await reposResponse.json();
 
     // Filter and prepare data before fetching languages to reduce subsequent calls if many repos
     const relevantRepoNames = new Set(Object.keys({
@@ -65,12 +71,14 @@ export async function GET() {
           const langRes = await fetch(`https://api.github.com/repos/${owner}/${repo.name}/languages`, {
             headers: headers,
           });
-          const languages = await langRes.json();
 
           if (!langRes.ok) {
-            console.warn(`Failed to fetch languages for ${repo.name}:`, languages.message);
+            const langErrorText = await langRes.text();
+            console.warn(`Failed to fetch languages for ${repo.name}: ${langRes.status}`, langErrorText);
             return { ...repo, languages: {} }; // Return with empty languages on error
           }
+
+          const languages = await langRes.json();
 
           // If this is the PersonalWebsite repo and we have a latest commit, use that date
           if (repo.name === 'PersonalWebsite' && personalWebsiteLatestCommit) {
