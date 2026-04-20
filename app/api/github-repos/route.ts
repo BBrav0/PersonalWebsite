@@ -1,10 +1,11 @@
 import { NextResponse } from 'next/server';
 import { PROJECTS_REPO_CONFIG, SOFTWARE_REPO_CONFIG } from '../../../lib/github-repo-config';
 
-const GITHUB_TOKEN = process.env.GITHUB_PERSONAL_ACCESS_TOKEN;
 const GITHUB_USERNAME = "BBrav0"; // Your GitHub username
 
 export async function GET() {
+  // Read env var at request time for Cloudflare Workers compatibility
+  const GITHUB_TOKEN = process.env.GITHUB_PERSONAL_ACCESS_TOKEN;
   console.log('Attempting to fetch repositories. GITHUB_TOKEN status:', GITHUB_TOKEN ? 'Loaded' : 'Not Loaded');
   if (!GITHUB_TOKEN) {
     console.error('GITHUB_PERSONAL_ACCESS_TOKEN is not set in environment variables.');

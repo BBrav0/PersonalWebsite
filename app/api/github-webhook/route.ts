@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
 import crypto from 'crypto'
 
-const WEBHOOK_SECRET = process.env.GITHUB_WEBHOOK_SECRET
-
 export async function POST(request: NextRequest) {
+  // Read env var at request time for Cloudflare Workers compatibility
+  const WEBHOOK_SECRET = process.env.GITHUB_WEBHOOK_SECRET
+
   try {
     const body = await request.text()
     const signature = request.headers.get('x-hub-signature-256')
