@@ -7,9 +7,12 @@
   "assets": {
     "directory": ".open-next/assets",
     "binding": "ASSETS"
+  },
+  "build": {
+    "command": "npx opennextjs-cloudflare build && mkdir -p .open-next/assets/cdn-cgi/_next_cache && cp -r .open-next/cache/* .open-next/assets/cdn-cgi/_next_cache/",
+    "watch_dir": ["app", "components", "content", "lib", "public", "styles"]
   }
 }
 
 // Required environment variables (set in Cloudflare dashboard):
 // - GITHUB_PERSONAL_ACCESS_TOKEN — GitHub API token for fetching repos
-// - GITHUB_WEBHOOK_SECRET — Secret for verifying GitHub webhook signatures
