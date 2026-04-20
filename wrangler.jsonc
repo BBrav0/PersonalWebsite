@@ -1,7 +1,7 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "main": ".open-next/worker.js",
-  "name": "benbravo-net",
+  "name": "leagueback",
   "compatibility_date": "2025-04-01",
   "compatibility_flags": ["nodejs_compat"],
   "assets": {
@@ -11,4 +11,8 @@
 }
 
 // Required environment variables (set in Cloudflare dashboard):
-// - GITHUB_PERSONAL_ACCESS_TOKEN: GitHub API token for fetching repos (used by /api/github-repos)
+// - SUPABASE_URL / NEXT_PUBLIC_SUPABASE_URL
+// - SUPABASE_ANON_KEY / NEXT_PUBLIC_SUPABASE_ANON_KEY
+// - SUPABASE_SERVICE_ROLE_KEY
+// - BACKFILL_SECRET
+// - RIOT_PROXY_URL (optional)
