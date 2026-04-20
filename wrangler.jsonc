@@ -11,8 +11,5 @@
 }
 
 // Required environment variables (set in Cloudflare dashboard):
-// - SUPABASE_URL / NEXT_PUBLIC_SUPABASE_URL
-// - SUPABASE_ANON_KEY / NEXT_PUBLIC_SUPABASE_ANON_KEY
-// - SUPABASE_SERVICE_ROLE_KEY
-// - BACKFILL_SECRET
-// - RIOT_PROXY_URL (optional)
+// - GITHUB_PERSONAL_ACCESS_TOKEN — GitHub API token for fetching repos
+// - GITHUB_WEBHOOK_SECRET — Secret for verifying GitHub webhook signatures
