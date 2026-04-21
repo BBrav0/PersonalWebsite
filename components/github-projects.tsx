@@ -43,7 +43,6 @@ export function GithubProjects({ repoConfig, onRateLimit, onLatestUpdate }: Gith
   const [filters, setFilters] = useState({
     languages: [] as string[],
     libraries: [] as string[],
-    inProgress: false
   })
 
   // State for selected repository and README content
@@ -193,7 +192,6 @@ export function GithubProjects({ repoConfig, onRateLimit, onLatestUpdate }: Gith
   // Apply filters and sorting
   const filteredAndSortedRepos = repos
     .filter(repo => {
-      if (filters.inProgress && !repoConfig[repo.name]?.inProgress) return false
       if (filters.languages.length > 0 && !Object.keys(repo.languages || {}).some(lang => filters.languages.includes(lang))) return false
       if (filters.libraries.length > 0 && !repoConfig[repo.name]?.libraries?.some(lib => filters.libraries.includes(lib))) return false
       return true
@@ -220,7 +218,7 @@ export function GithubProjects({ repoConfig, onRateLimit, onLatestUpdate }: Gith
     })
   }
 
-  const hasActiveFilters = filters.languages.length > 0 || filters.libraries.length > 0 || filters.inProgress
+  const hasActiveFilters = filters.languages.length > 0 || filters.libraries.length > 0
 
   if (loading) {
     return (
@@ -310,26 +308,12 @@ export function GithubProjects({ repoConfig, onRateLimit, onLatestUpdate }: Gith
                 </div>
               </div>
 
-              <div className="flex items-center space-x-2">
-                <Checkbox
-                  id="in-progress"
-                  checked={filters.inProgress}
-                  onCheckedChange={(checked) => {
-                    setFilters(prev => ({
-                      ...prev,
-                      inProgress: checked as boolean
-                    }))
-                  }}
-                />
-                <Label htmlFor="in-progress" className="font-normal">In Progress Only</Label>
-              </div>
-
               {hasActiveFilters && (
                 <Button 
                   variant="ghost" 
                   size="sm" 
                   className="w-full"
-                  onClick={() => setFilters({ languages: [], libraries: [], inProgress: false })}
+                  onClick={() => setFilters({ languages: [], libraries: [] })}
                 >
                   <X className="w-4 h-4 mr-2" />
                   Clear filters
@@ -364,11 +348,6 @@ export function GithubProjects({ repoConfig, onRateLimit, onLatestUpdate }: Gith
                     {config?.title || repo.name}
                   </h3>
                   <div className="flex items-center gap-1 shrink-0">
-                    {config?.inProgress && (
-                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium bg-amber-500/10 text-amber-500 border border-amber-500/20">
-                        in progress
-                      </span>
-                    )}
                     <BookOpen className="w-3.5 h-3.5 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
                   </div>
                 </div>

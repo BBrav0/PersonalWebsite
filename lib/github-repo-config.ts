@@ -14,7 +14,7 @@ export interface RepoConfig {
   title?: string;
   description?: string;
   detailsMarkdown?: string;
-  inProgress?: boolean;
+
   owner?: string;
   manualRepo?: {
     updatedAt: string;
@@ -28,7 +28,7 @@ export const PROJECTS_REPO_CONFIG: Record<string, RepoConfig> = {
     title: "Personal Website",
     order: 1,
     libraries: ["React","Vercel","Github API"],
-    inProgress: true,
+
   },
   "CanvasToNotion": {
     title: "Canvas to Notion",
@@ -56,13 +56,13 @@ export const PROJECTS_REPO_CONFIG: Record<string, RepoConfig> = {
     order: 5,
     description: "Repository for the company luxury exotics rental company ExoDrive. Website: https://exodrive.co",
     libraries: ["React","Vercel","Supabase"],
-    inProgress: true,
+
     owner: "gunvir103",
   },
   "VoiceCommandsPC": {
     order: 6,
     libraries: ["Gemini API"],
-    inProgress: true,
+
   },
   "GarminDataReader": {
     title: "Garmin Data Reader",
@@ -111,7 +111,7 @@ export const SOFTWARE_REPO_CONFIG: Record<string, RepoConfig> = {
     title: "Leagueback",
     order: 2,
     libraries: ["React","Riot API","Supabase"],
-    inProgress: true,
+
     customLinks: [
       {
         label: 'Website',
@@ -131,7 +131,7 @@ export const SOFTWARE_REPO_CONFIG: Record<string, RepoConfig> = {
     order: 3,
     description: 'An interactive chess training app that combines in-browser engine analysis with rating-aware AI coaching.',
     libraries: ['Next.js', 'Stockfish 18', 'LLM Coaching'],
-    inProgress: true,
+
     customLinks: [
       {
         label: 'Website',
