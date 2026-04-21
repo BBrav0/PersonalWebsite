@@ -30,44 +30,65 @@ export const PROJECTS_REPO_CONFIG: Record<string, RepoConfig> = {
     libraries: ["React","Vercel","Github API"],
     inProgress: true,
   },
+  "CanvasToNotion": {
+    title: "Canvas to Notion",
+    order: 2,
+    description: "Syncs coursework and assignment data from Canvas into Notion for cleaner planning and tracking.",
+    libraries: ["Canvas API", "Notion API"],
+    owner: "BBrav0",
+  },
+  "feagi-java-sdk": {
+    title: "FEAGI Java SDK",
+    order: 3,
+    description: "Java SDK for building apps and integrations on top of the FEAGI neurorobotics platform.",
+    libraries: ["Java", "Maven", "FEAGI"],
+    owner: "feagi",
+  },
+  "Resume-Building": {
+    title: "Resume Building",
+    order: 4,
+    description: "Source repo for my resume workflow, assets, and PDF output used across my personal site.",
+    libraries: ["LaTeX", "GitHub Actions"],
+    owner: "BBrav0",
+  },
   "exodrive": {
     title: "ExoDrive",
-    order: 2,
+    order: 5,
     description: "Repository for the company luxury exotics rental company ExoDrive. Website: https://exodrive.co",
     libraries: ["React","Vercel","Supabase"],
     inProgress: true,
     owner: "gunvir103",
   },
   "VoiceCommandsPC": {
-    order: 4,
+    order: 6,
     libraries: ["Gemini API"],
     inProgress: true,
   },
-  "TTChat2MC": {
-    title: 'TikTok Minecraft Link',
-    order: 5,
-    libraries: ['Maven','TikTok API', 'Minecraft Plugin'],
-  },
-  'FitbitDataReader': {
-    title: 'Fitbit Data Reader',
-    order: 6,
-    description: "Old repository for reading Fitbit running data with some strava data via their APIs.",
-    libraries: ['Fitbit API','Strava API', 'SQLlite'],
-    owner: 'BBrav0'
-  },
-  'SchoolSite': {
-    title: 'School Site',
-    libraries: ["Vercel"],
+  "GarminDataReader": {
+    title: "Garmin Data Reader",
     order: 7,
+    libraries: ["Garmin API", "SQLlite"]
   },
-  'WaterSortSolver': {
-    title: 'Water Sort Solver',
+  "TTChat2MC": {
+    title: "TikTok Minecraft Link",
     order: 8,
+    libraries: ["Maven","TikTok API", "Minecraft Plugin"],
   },
-  'GarminDataReader': {
-    title: 'Garmin Data Reader',
-    order: 3,
-    libraries: ['Garmin API', 'SQLlite']
+  "WaterSortSolver": {
+    title: "Water Sort Solver",
+    order: 9,
+  },
+  "FitbitDataReader": {
+    title: "Fitbit Data Reader",
+    order: 10,
+    description: "Old repository for reading Fitbit running data with some strava data via their APIs.",
+    libraries: ["Fitbit API","Strava API", "SQLlite"],
+    owner: "BBrav0"
+  },
+  "SchoolSite": {
+    title: "School Site",
+    libraries: ["Vercel"],
+    order: 11,
   }
 };
 
