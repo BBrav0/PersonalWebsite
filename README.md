@@ -46,6 +46,10 @@ npm run deploy
 **Environment variables** (set in Cloudflare dashboard):
 - `GITHUB_PERSONAL_ACCESS_TOKEN` — GitHub API token for fetching repos
 
+## Ideas
+
+- Homepage: add a simple `hometown → college → job` graphic to show the path from where I started to Pitt to Deloitte.
+
 ## Writing a Blog Post
 
 Drop a markdown file in `content/posts/`:
