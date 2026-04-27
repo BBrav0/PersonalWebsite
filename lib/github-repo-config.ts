@@ -94,9 +94,36 @@ export const PROJECTS_REPO_CONFIG: Record<string, RepoConfig> = {
 
 
 export const SOFTWARE_REPO_CONFIG: Record<string, RepoConfig> = {
+  'CoursePlannerWEB': {
+    title: 'CoursePlanner Web',
+    order: 1,
+    description: 'A fully functional web app for planning a college degree, rebuilt from my original desktop app into a more accessible experience.',
+    libraries: ['Next.js', 'TypeScript', 'Supabase'],
+    customLinks: [
+      {
+        label: 'Website',
+        url: 'https://courseplanner.benbravo.net',
+        variant: 'default',
+        icon: null
+      }
+    ],
+    detailsMarkdown: `# CoursePlanner Web
+
+CoursePlanner Web is the web version of a tool I originally built for myself during college to make degree planning easier.
+
+It helps map out semesters, requirements, electives, credits, and long-term course sequencing in a way that feels practical instead of messy.
+
+The repository is private, but the app is live and publicly available at [courseplanner.benbravo.net](https://courseplanner.benbravo.net).`,
+    manualRepo: {
+      updatedAt: '2026-04-27T00:00:00.000Z',
+      languages: {
+        TypeScript: 1
+      }
+    }
+  },
   'CoursePlanner': {
     title: 'Ben\'s Course Planner',
-    order: 1,
+    order: 2,
     libraries: ['Tkinter'],
     customLinks: [
       {
@@ -109,7 +136,7 @@ export const SOFTWARE_REPO_CONFIG: Record<string, RepoConfig> = {
   },
   "Leagueback-WEBAPP": {
     title: "Leagueback",
-    order: 2,
+    order: 3,
     libraries: ["React","Riot API","Supabase"],
 
     customLinks: [
@@ -123,12 +150,12 @@ export const SOFTWARE_REPO_CONFIG: Record<string, RepoConfig> = {
   },
   'BlitzLoLLink': {
     title: 'Blitz League Link',
-    order: 4,
+    order: 5,
     libraries: ['Windows Scripting']
   },
   'ChessCoachAI': {
     title: 'Chess Coach AI',
-    order: 3,
+    order: 4,
     description: 'An interactive chess training app that combines in-browser engine analysis with rating-aware AI coaching.',
     libraries: ['Next.js', 'Stockfish 18', 'LLM Coaching'],
 
