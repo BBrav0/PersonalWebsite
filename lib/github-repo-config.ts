@@ -44,43 +44,64 @@ export const PROJECTS_REPO_CONFIG: Record<string, RepoConfig> = {
     libraries: ["Java", "Maven", "FEAGI"],
     owner: "feagi",
   },
+  "CoursePlanner": {
+    title: "Ben's Course Planner",
+    order: 4,
+    description: "The original desktop version of my course planning tool, built to make degree planning and semester mapping easier during college.",
+    libraries: ["Python", "Tkinter"],
+    owner: "BBrav0",
+    customLinks: [
+      {
+        label: 'Download',
+        url: 'https://github.com/BBrav0/CoursePlanner/releases',
+        variant: 'default',
+        icon: null
+      },
+      {
+        label: 'Website',
+        url: 'https://courseplanner.benbravo.net',
+        variant: 'outline',
+        icon: null
+      }
+    ]
+  },
   "Resume-Building": {
     title: "Resume Building",
-    order: 4,
+    order: 5,
     description: "Source repo for my resume workflow, assets, and PDF output used across my personal site.",
     libraries: ["LaTeX", "GitHub Actions"],
     owner: "BBrav0",
   },
   "exodrive": {
     title: "ExoDrive",
-    order: 5,
+    order: 6,
     description: "Repository for the company luxury exotics rental company ExoDrive. Website: https://exodrive.co",
     libraries: ["React","Vercel","Supabase"],
 
     owner: "gunvir103",
   },
   "VoiceCommandsPC": {
-    order: 6,
+    order: 7,
     libraries: ["Gemini API"],
 
   },
   "GarminDataReader": {
     title: "Garmin Data Reader",
-    order: 7,
+    order: 8,
     libraries: ["Garmin API", "SQLlite"]
   },
   "TTChat2MC": {
     title: "TikTok Minecraft Link",
-    order: 8,
+    order: 9,
     libraries: ["Maven","TikTok API", "Minecraft Plugin"],
   },
   "WaterSortSolver": {
     title: "Water Sort Solver",
-    order: 9,
+    order: 10,
   },
   "FitbitDataReader": {
     title: "Fitbit Data Reader",
-    order: 10,
+    order: 11,
     description: "Old repository for reading Fitbit running data with some strava data via their APIs.",
     libraries: ["Fitbit API","Strava API", "SQLlite"],
     owner: "BBrav0"
@@ -120,19 +141,6 @@ The repository is private, but the app is live and publicly available at [course
         TypeScript: 1
       }
     }
-  },
-  'CoursePlanner': {
-    title: 'Ben\'s Course Planner',
-    order: 2,
-    libraries: ['Tkinter'],
-    customLinks: [
-      {
-        label: 'Download',
-        url: 'https://github.com/BBrav0/CoursePlanner/releases',
-        variant: 'default',
-        icon: null
-      }
-    ]
   },
   "Leagueback-WEBAPP": {
     title: "Leagueback",
