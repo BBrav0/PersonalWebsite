@@ -154,7 +154,7 @@ export default function PersonalWebsite() {
                 </div>
                 <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-accent/50 text-sm text-muted-foreground">
                   <Calendar className="w-3.5 h-3.5 text-primary" />
-                  <span>Graduating Spring 2026</span>
+                  <span>Graduated Spring 2026</span>
                 </div>
               </div>
             </div>
@@ -192,7 +192,7 @@ export default function PersonalWebsite() {
               </div>
               <div className="grid sm:grid-cols-2 gap-4 ml-[52px]">
                 <div className="text-sm">
-                  <span className="text-muted-foreground">Expected Graduation</span>
+                  <span className="text-muted-foreground">Graduated</span>
                   <p className="font-medium text-foreground">Spring 2026</p>
                 </div>
                 <div className="text-sm">
