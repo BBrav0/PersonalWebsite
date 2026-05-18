@@ -30,23 +30,30 @@ export const PROJECTS_REPO_CONFIG: Record<string, RepoConfig> = {
     libraries: ["React","Vercel","Github API"],
 
   },
+  "droid-discord-cli-bridge": {
+    title: "Droid Discord CLI Bridge",
+    order: 2,
+    description: "A Discord bot that wraps an interactive Droid CLI session, streams terminal output into Discord, and relays replies back into the same running session.",
+    libraries: ["Python", "Discord.py", "PTY", "Droid CLI"],
+    owner: "BBrav0",
+  },
   "CanvasToNotion": {
     title: "Canvas to Notion",
-    order: 2,
+    order: 3,
     description: "Syncs coursework and assignment data from Canvas into Notion for cleaner planning and tracking.",
     libraries: ["Canvas API", "Notion API"],
     owner: "BBrav0",
   },
   "feagi-java-sdk": {
     title: "FEAGI Java SDK",
-    order: 3,
+    order: 4,
     description: "Java SDK for building apps and integrations on top of the FEAGI neurorobotics platform.",
     libraries: ["Java", "Maven", "FEAGI"],
     owner: "feagi",
   },
   "CoursePlanner": {
     title: "Ben's Course Planner",
-    order: 4,
+    order: 5,
     description: "The original desktop version of my course planning tool, built to make degree planning and semester mapping easier during college.",
     libraries: ["Python", "Tkinter"],
     owner: "BBrav0",
@@ -67,41 +74,41 @@ export const PROJECTS_REPO_CONFIG: Record<string, RepoConfig> = {
   },
   "Resume-Building": {
     title: "Resume Building",
-    order: 5,
+    order: 6,
     description: "Source repo for my resume workflow, assets, and PDF output used across my personal site.",
     libraries: ["LaTeX", "GitHub Actions"],
     owner: "BBrav0",
   },
   "exodrive": {
     title: "ExoDrive",
-    order: 6,
+    order: 7,
     description: "Repository for the company luxury exotics rental company ExoDrive. Website: https://exodrive.co",
     libraries: ["React","Vercel","Supabase"],
 
     owner: "gunvir103",
   },
   "VoiceCommandsPC": {
-    order: 7,
+    order: 8,
     libraries: ["Gemini API"],
 
   },
   "GarminDataReader": {
     title: "Garmin Data Reader",
-    order: 8,
+    order: 9,
     libraries: ["Garmin API", "SQLlite"]
   },
   "TTChat2MC": {
     title: "TikTok Minecraft Link",
-    order: 9,
+    order: 10,
     libraries: ["Maven","TikTok API", "Minecraft Plugin"],
   },
   "WaterSortSolver": {
     title: "Water Sort Solver",
-    order: 10,
+    order: 11,
   },
   "FitbitDataReader": {
     title: "Fitbit Data Reader",
-    order: 11,
+    order: 12,
     description: "Old repository for reading Fitbit running data with some strava data via their APIs.",
     libraries: ["Fitbit API","Strava API", "SQLlite"],
     owner: "BBrav0"
@@ -109,7 +116,7 @@ export const PROJECTS_REPO_CONFIG: Record<string, RepoConfig> = {
   "SchoolSite": {
     title: "School Site",
     libraries: ["Vercel"],
-    order: 11,
+    order: 13,
   }
 };
 
